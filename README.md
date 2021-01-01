@@ -10,5 +10,5 @@ a React App for spying on the price of items on the warframe market
 ## Roadmap:
 | Skateboard                      | Bike | Car  |
 |:------------------------------- |:---- |:---- |
-| - Build Website with navigation | test | test |
-| and mock data using React       | test | test |
+| - Build Website with navigation
+ and mock data using React       | test | test |
