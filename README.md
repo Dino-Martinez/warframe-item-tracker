@@ -10,5 +10,4 @@ a React App for spying on the price of items on the warframe market
 ## Roadmap:
 | Skateboard                      | Bike | Car  |
 |:------------------------------- |:---- |:---- |
-| - Build Website with navigation
- and mock data using React       | test | test |
+| <ul><li>Build Website with navigation and mock data using React </li><li>Implement Search Feature using Warframe Market API</li></ul> | <ul><li>Add “Add to Watch List” Feature and display on Watch List Page</li></ul> | Tackle stretch challenges |
