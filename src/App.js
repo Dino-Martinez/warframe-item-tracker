@@ -1,12 +1,18 @@
 import './App.css';
+import './bootstrap.min.css';
+import React from 'react';
+import { HashRouter as Router, Route } from 'react-router-dom';
+import Footer from './Footer';
+import Header from './Header';
+import SearchPage from './SearchPage';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Project Underway...</h1>
-      </header>
-    </div>
+    <Router>
+      <Header />
+      <Route exact path="/" component={SearchPage} />
+      <Footer />
+    </Router>
   );
 }
 
