@@ -1,0 +1,8 @@
+
+.navbar-nav {
+    flex-direction:row;
+    width: 25%;
+    justify-content:space-around;
+    font-size: 1.5em;
+
+}
