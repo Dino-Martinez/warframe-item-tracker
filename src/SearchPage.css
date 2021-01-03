@@ -1,0 +1,9 @@
+.form-control {
+    display:flex;
+    width:70vw;
+}
+.jumbotron {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
