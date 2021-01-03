@@ -1,6 +1,7 @@
 import React from 'react';
 import './SearchPage.css';
 import {Link} from 'react-router-dom';
+import icon from './img/search-icon.png';
 
 class SearchPage extends React.Component {
   constructor() {
@@ -17,10 +18,14 @@ class SearchPage extends React.Component {
   }
   render() {
     return(
-      <div className="jumbotron form-group">
-        <input type="text"  className="form-control" value={this.state.query} onChange={this.updateQuery} />
-        <Link to ={"/items/"+this.state.query} >search</Link>
+      <div>
+        <h1 className="jumbotron" >Warframe Scraper</h1>
+        <div className="jumbotron form-group">
+          <input type="text"  className="form-control" value={this.state.query} onChange={this.updateQuery} />
+          <Link to ={"/items/"+this.state.query} ><img src={icon} height="30" width="30" alt="Search Button"></img></Link>
+        </div>
       </div>
+
 
 
     );
