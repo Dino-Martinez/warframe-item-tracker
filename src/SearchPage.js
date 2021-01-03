@@ -11,11 +11,13 @@ class SearchPage extends React.Component {
     };
     this.updateQuery = this.updateQuery.bind(this);
   }
+
   updateQuery(event) {
     this.setState({
       query: event.target.value
     });
   }
+  
   render() {
     return(
       <div>
@@ -25,9 +27,6 @@ class SearchPage extends React.Component {
           <Link to ={"/items/"+this.state.query} ><img src={icon} height="30" width="30" alt="Search Button"></img></Link>
         </div>
       </div>
-
-
-
     );
   }
 }

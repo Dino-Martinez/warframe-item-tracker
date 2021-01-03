@@ -13,6 +13,7 @@ class WatchList extends React.Component {
       urgentItems: []
     };
   }
+  
   render() {
     return (
       <div>
