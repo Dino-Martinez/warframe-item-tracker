@@ -7,3 +7,9 @@
     justify-content:center;
     align-items:center;
 }
+body {
+    background: #e9ecef;
+}
+h1 {
+    font-size: 6em;
+}
