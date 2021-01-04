@@ -14,6 +14,7 @@ class WatchList extends React.Component {
         {id: "itemIdFive", name: "Test name", average: 30, min: 35, max: 35, isUrgent: false},
         {id: "itemIdSix", name: "Test name", average: 30, min: 35, max: 35, isUrgent: true},
       ],
+      result: '',
     };
 
     this.updateData = this.updateData.bind(this);
@@ -29,7 +30,7 @@ class WatchList extends React.Component {
 
 
   // Check periodically for api update, set state to new data
-  updateData() {
+  async updateData() {
     console.log('updating...');
     const items = [
       {id: "itemIdOne", name: "Test name", average: 10, min: Math.floor((Math.random() * 100) + 1), max: 15, isUrgent: false},
@@ -39,14 +40,16 @@ class WatchList extends React.Component {
       {id: "itemIdFive", name: "Test name", average: 30, min: Math.floor((Math.random() * 100) + 1), max: 35, isUrgent: false},
       {id: "itemIdSix", name: "Test name", average: 30, min: Math.floor((Math.random() * 100) + 1), max: 35, isUrgent: true},
     ];
-
-    this.setState({items: items});
+    const result = await fetch('/api/');
+    const json = await result.json();
+    console.log(json);
+    this.setState({ items, result: json });
   }
 
   render() {
     return (
       <div className="container text-center mt-5">
-        <h2>Watched Items:</h2>
+        <h2>Watched Items:{this.state.result.data}</h2>
         <table className="table table-bordered table-striped">
           <thead className="thead-dark">
             <tr>
