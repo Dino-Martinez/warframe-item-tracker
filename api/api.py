@@ -19,6 +19,7 @@ mongo.db.test.insert([
         "ducats": 500,
         "trading_tax": 500,
         "isUrgent": False,
+        "isWatched": False,
         "items_in_set": [
             {"item_id": "test_name_2"},
             {"item_id": "test_name_3"},
@@ -49,6 +50,7 @@ mongo.db.test.insert([
         "ducats": 250,
         "trading_tax": 520,
         "isUrgent": True,
+        "isWatched": False,
         "items_in_set": [
             {"item_id": "test_name_1"},
             {"item_id": "test_name_3"},
@@ -79,6 +81,7 @@ mongo.db.test.insert([
         "ducats": 5000000,
         "trading_tax": 50000000,
         "isUrgent": False,
+        "isWatched": False,
         "items_in_set": [
             {"item_id": "test_name_1"},
             {"item_id": "test_name_2"},
