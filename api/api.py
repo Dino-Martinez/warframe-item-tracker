@@ -10,8 +10,8 @@ app.config["MONGO_URI"] = host
 mongo = PyMongo(app)
 
 
-mongo.db.items.delete_many({})
-mongo.db.items.insert([
+mongo.db.test.delete_many({})
+mongo.db.test.insert([
     {
         "item_id": "test_name",
         "name": "Test Name",
@@ -106,11 +106,11 @@ mongo.db.items.insert([
 
 @app.route('/api/test/single_item')
 def api_test_data_single_item():
-    item = dumps(mongo.db.items.find_one({"item_id": "test_name_2"}))
+    item = dumps(mongo.db.test.find_one({"item_id": "test_name_2"}))
     return item
 
 
 @app.route('/api/test/item_list')
 def api_test_data_item_list():
-    items = dumps(mongo.db.items.find({}))
+    items = dumps(mongo.db.test.find({}))
     return items
