@@ -12,15 +12,105 @@ mongo = PyMongo(app)
 
 mongo.db.items.delete_many({})
 mongo.db.items.insert([
-    {"item_id": "itemIdOne", "name": "Test data", "average": 5, "min": 5, "max": 15, "isUrgent": False},
-    {"item_id": "itemIdTwo", "name": "Test data", "average": 5, "min": 15, "max": 25, "isUrgent": False},
-    {"item_id": "itemIdThree", "name": "Tristan Thompson", "average": 100, "min": -5, "max": 5, "isUrgent": True},
-    {"item_id": "itemIdFour", "name": "Test data", "average": 5, "min": 35, "max": 35, "isUrgent": True},
-    {"item_id": "itemIdFive", "name": "Test data", "average": 5, "min": 35, "max": 35, "isUrgent": False},
-    {"item_id": "itemIdSix", "name": "Test data", "average": 5, "min": 35, "max": 35, "isUrgent": True},
+    {
+        "item_id": "test_name",
+        "name": "Test Name",
+        "img_url": "https://api.warframe.market/static/assets/icons/en/thumbs/trinity_prime_neuroptics.4115dba418ab8ee70197a7fdaee8da76.128x128.png",
+        "ducats": 500,
+        "trading_tax": 500,
+        "isUrgent": False,
+        "items_in_set": [
+            {"item_id": "test_name_2"},
+            {"item_id": "test_name_3"},
+        ],
+        "relics": [
+            "Test Relic",
+            "Test Relic",
+            "Test Relic",
+            "Test Relic",
+        ],
+        "48hr": [
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+        ],
+        "90day": [
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+        ],
+    },
+    {
+        "item_id": "test_name_2",
+        "name": "Test Name 2",
+        "img_url": "https://api.warframe.market/static/assets/icons/en/thumbs/trinity_prime_neuroptics.4115dba418ab8ee70197a7fdaee8da76.128x128.png",
+        "ducats": 250,
+        "trading_tax": 520,
+        "isUrgent": True,
+        "items_in_set": [
+            {"item_id": "test_name_1"},
+            {"item_id": "test_name_3"},
+        ],
+        "relics": [
+            "Test Relic",
+            "Test Relic",
+            "Test Relic",
+            "Test Relic",
+        ],
+        "48hr": [
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+        ],
+        "90day": [
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+        ],
+    },
+    {
+        "item_id": "test_name_3",
+        "name": "Test Name 3",
+        "img_url": "https://api.warframe.market/static/assets/icons/en/thumbs/trinity_prime_neuroptics.4115dba418ab8ee70197a7fdaee8da76.128x128.png",
+        "ducats": 5000000,
+        "trading_tax": 50000000,
+        "isUrgent": False,
+        "items_in_set": [
+            {"item_id": "test_name_1"},
+            {"item_id": "test_name_2"},
+        ],
+        "relics": [
+            "Test Relic",
+            "Test Relic",
+            "Test Relic",
+            "Test Relic",
+        ],
+        "48hr": [
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+        ],
+        "90day": [
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+            {"avg": 5, "min": 3, "max": 7},
+        ],
+    },
 ])
 
-@app.route('/api/')
-def api_home():
+@app.route('/api/test/single_item')
+def api_test_data_single_item():
+    item = dumps(mongo.db.items.find_one({"item_id": "test_name_2"}))
+    return item
+
+
+@app.route('/api/test/item_list')
+def api_test_data_item_list():
     items = dumps(mongo.db.items.find({}))
     return items
