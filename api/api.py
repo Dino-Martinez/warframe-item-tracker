@@ -14,7 +14,7 @@ mongo.db.items.delete_many({})
 mongo.db.items.insert([
     {"item_id": "itemIdOne", "name": "Test data", "average": 5, "min": 5, "max": 15, "isUrgent": False},
     {"item_id": "itemIdTwo", "name": "Test data", "average": 5, "min": 15, "max": 25, "isUrgent": False},
-    {"item_id": "itemIdThree", "name": "Test data", "average": 5, "min": 35, "max": 35, "isUrgent": False},
+    {"item_id": "itemIdThree", "name": "Tristan Thompson", "average": 100, "min": -5, "max": 5, "isUrgent": True},
     {"item_id": "itemIdFour", "name": "Test data", "average": 5, "min": 35, "max": 35, "isUrgent": True},
     {"item_id": "itemIdFive", "name": "Test data", "average": 5, "min": 35, "max": 35, "isUrgent": False},
     {"item_id": "itemIdSix", "name": "Test data", "average": 5, "min": 35, "max": 35, "isUrgent": True},

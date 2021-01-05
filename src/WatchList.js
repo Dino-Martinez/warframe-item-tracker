@@ -27,7 +27,7 @@ class WatchList extends React.Component {
     const result = await fetch('/api/');
     const json = await result.json();
     console.log(json);
-    this.setState({ items: json.items });
+    this.setState({ items: json });
   }
 
   render() {
