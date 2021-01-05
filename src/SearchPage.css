@@ -1,0 +1,18 @@
+.form-control {
+    display:flex;
+    width:70vw;
+}
+
+.jumbotron {
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+body {
+    background: #e9ecef;
+}
+
+h1 {
+    font-size: 6em;
+}
