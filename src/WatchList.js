@@ -10,6 +10,8 @@ class WatchList extends React.Component {
     };
 
     this.updateData = this.updateData.bind(this);
+    this.removeItem = this.removeItem.bind(this);
+
   }
 
   componentDidMount() {
@@ -28,6 +30,9 @@ class WatchList extends React.Component {
     const json = await result.json();
     this.setState({ items: json });
   }
+  async removeItem(item_id) {
+    const result = await fetch('/api/watchlist/remove/' + item_id)
+  }
 
   render() {
     return (
@@ -40,6 +45,7 @@ class WatchList extends React.Component {
               <th>Average Price</th>
               <th>Min. Price</th>
               <th>Max. Price</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -52,6 +58,7 @@ class WatchList extends React.Component {
                   <td>{item["90day"].avg}</td>
                   <td>{item["90day"].min}</td>
                   <td>{item["90day"].max}</td>
+                  <td><p onClick={() => this.removeItem(item.item_id)}>X</p></td>
                 </tr>
               )
             })
