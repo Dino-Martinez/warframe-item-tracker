@@ -15,7 +15,8 @@ class ItemInfo extends React.Component {
       ducats: 0,
       relics: [],
       imgUrl: "",
-      itemName: ""
+      itemName: "",
+      itemId: "",
     };
   }
 
@@ -66,7 +67,7 @@ class ItemInfo extends React.Component {
     const ninetyDays = itemJson["90day"];
     const fortyEightHours = itemJson["48hr"];
 
-    this.setState({item : itemJson, ninetyDays, fortyEightHours, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName});
+    this.setState({item : itemJson, ninetyDays, fortyEightHours, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName, itemId});
   }
   getItemName(itemJson) {
     return
@@ -82,6 +83,12 @@ class ItemInfo extends React.Component {
   }
   getDucats(itemJson) {
     return itemJson.ducats
+  }
+  async addItem(itemId) {
+    const result = await fetch('/api/watchlist/add/' + itemId)
+    console.log("added")
+
+    return
   }
 
   render() {
@@ -100,7 +107,10 @@ class ItemInfo extends React.Component {
           <div className ="item-img">
             <img src={this.state.imgUrl} alt="Item"></img>
           </div>
-          <h3>{this.state.itemName}</h3>
+          <div className="btn-name">
+            <h3>{this.state.itemName}</h3>
+            <button className="btn btn-info" onClick={() => this.addItem(this.state.itemId)}>Add Item to Watch List</button>
+          </div>
           {this.state.successfulAPICall
             &&(
             <div className="container">
