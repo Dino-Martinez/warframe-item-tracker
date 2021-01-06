@@ -12,3 +12,7 @@
 .row *{
   margin: 10px 0px;
 }
+div h3 {
+  display:flex;
+  justify-content: center;
+}

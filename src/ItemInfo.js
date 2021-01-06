@@ -19,38 +19,38 @@ class ItemInfo extends React.Component {
       ducats: 0,
       relics: [],
       imgUrl: "",
+      itemName: ""
     };
   }
 
   componentDidUpdate(prevProps) {
     // After the component updates (page load from "item info page"), we grab the search query and convert it to a format that our API can understand
-    if(prevProps.match.params.itemId !== this.props.match.params.itemId) {
-      const { match: { params: { itemId } } } = this.props;
-      const underscoredId = itemId.trim().toLowerCase().split(" ").join("_");
-      this.retrieveData(underscoredId);
+    if(prevProps.match.params.itemName !== this.props.match.params.itemName) {
+      const { match: { params: { itemName } } } = this.props;
+      this.retrieveData(itemName);
     }
   }
 
   componentDidMount() {
     // After the component mounts (page load from HOME), we grab the search query and convert it to a format that our API can understand
-    const { match: { params: { itemId } } } = this.props;
-    const underscoredId = itemId.trim().toLowerCase().split(" ").join("_");
-    this.retrieveData(underscoredId);
+    const { match: { params: { itemName } } } = this.props;
+    this.retrieveData(itemName);
   }
 
-  async retrieveData(underscoreId) {
+  async retrieveData(itemName) {
     // This function handles our API call which will later handle our database call
+    const itemId = itemName.trim().toLowerCase().split(" ").join("_");
 
     let isSingleItem = false;
     let successfulAPICall = false;
 
     // Database Call
-    const url = "/api/items/" + underscoreId;
+    const url = "/api/items/" + itemId;
     const itemResults = await fetch(url);
     const itemJson = await itemResults.json();
 
 
-    if (!underscoreId.endsWith("_set")) {
+    if (!itemId.endsWith("_set")) {
       isSingleItem = true;
     }  
     if(itemJson !== null) {
@@ -72,7 +72,10 @@ class ItemInfo extends React.Component {
     this.getNinetyDaysData(ninetyDays);
     this.getFortyEightHoursData(fortyEightHours);
 
-    this.setState({item : itemJson, ninetyDays, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem});
+    this.setState({item : itemJson, ninetyDays, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName});
+  }
+  getItemName(itemJson) {
+    return
   }
   getImage(itemJson) {
     return itemJson.img_url
@@ -142,6 +145,7 @@ class ItemInfo extends React.Component {
           <div className ="item-img">
             <img src={this.state.imgUrl} alt="Item"></img>
           </div>
+          <h3>{this.state.itemName}</h3>
           {this.state.successfulAPICall
             &&(
             <div className="container">
@@ -178,8 +182,8 @@ class ItemInfo extends React.Component {
                     {
                       this.state.relics.map ( (relic) => {
                         return (
-                          <div key={relic} className="row">
-                            <div className="col-sm-6 content">{relic}</div>
+                          <div key={relic.name} className="row">
+                            <div className="col-sm-6 content">{relic.name}</div>
                           </div>
                         )
                       })
