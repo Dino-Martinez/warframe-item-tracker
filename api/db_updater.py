@@ -24,8 +24,18 @@ def update_items():
             "isWatched": False,
             "items_in_set": [],
             "relics": [],
-            "48hr": [],
-            "90day": [],
+            "48hr": {
+                "avg": 0,
+                "min": 0,
+                "max": 0,
+                "hourly": [],
+            },
+            "90day": {
+                "avg": 0,
+                "min": 0,
+                "max": 0,
+                "hourly": [],
+            },
         }
 
         db.items.insert_one(db_item)
@@ -42,6 +52,14 @@ def update_watchlist():
             stats = stats_payload["statistics_closed"]
             daily_data = []
             hourly_data = []
+            num_hours = 0
+            hourly_avg = 0
+            hourly_min = 10000000000
+            hourly_max = -1
+            num_days = 0
+            daily_avg = 0
+            daily_min = 10000000000
+            daily_max = -1
 
             for hour in stats["48hours"]:
                 hour_data = {
@@ -49,6 +67,14 @@ def update_watchlist():
                     "max": hour["max_price"],
                     "avg": hour["avg_price"]
                 }
+                hourly_avg += hour["avg_price"]
+                num_hours += 1
+                if hour["min_price"] < hourly_min:
+                    hourly_min = hour["min_price"]
+
+                if hour["max_price"] > hourly_max:
+                    hourly_max = hour["max_price"]
+
                 hourly_data.append(hour_data)
 
             for day in stats["90days"]:
@@ -57,7 +83,22 @@ def update_watchlist():
                     "max": day["max_price"],
                     "avg": day["avg_price"]
                 }
+
+                daily_avg += day["avg_price"]
+                num_days += 1
+                if day["min_price"] < daily_min:
+                    daily_min = day["min_price"]
+
+                if day["max_price"] > daily_max:
+                    daily_max = day["max_price"]
+
                 daily_data.append(day_data)
+
+            if num_hours > 0:
+                hourly_avg = hourly_avg / num_hours
+
+            if num_days > 0:
+                daily_avg = daily_avg / num_days
 
             set_url = f'http://api.warframe.market/v1/items/{watched_item["item_id"]}'
             set_result = requests.get(set_url)
@@ -72,9 +113,14 @@ def update_watchlist():
 
             for item in set:
                 if item["en"]["item_name"] == watched_item["name"]:
-                    ducats = item["ducats"]
-                    trading_tax = item["trading_tax"]
-                    relics = item["en"]["drop"]
+                    try:
+                        ducats = item["ducats"]
+                        trading_tax = item["trading_tax"]
+                        relics = item["en"]["drop"]
+                    except:
+                        ducats = -1
+                        trading_tax = -1
+                        relics = []
                 else:
                     item_url = item["en"]["item_name"].strip().replace(" ", "_").lower()
                     item_ids.append(item_url)
@@ -85,8 +131,18 @@ def update_watchlist():
                 "trading_tax": trading_tax,
                 "items_in_set": item_ids,
                 "relics": relics,
-                "90day": daily_data,
-                "48hr": hourly_data,
+                "90day": {
+                    "avg": daily_avg,
+                    "min": daily_min,
+                    "max": daily_max,
+                    "daily": daily_data,
+                },
+                "48hr": {
+                    "avg": hourly_avg,
+                    "min": hourly_min,
+                    "max": hourly_max,
+                    "hourly": hourly_data,
+                },
             }
 
             db.items.update_one({'item_id': watched_item["item_id"]}, {"$set": new_item})
