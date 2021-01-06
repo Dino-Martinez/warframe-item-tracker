@@ -40,70 +40,53 @@ class ItemInfo extends React.Component {
 
   async retrieveData(underscoreId) {
     // This function handles our API call which will later handle our database call
+
     let isSingleItem = false;
-    if (!underscoreId.endsWith("_set")) {
-      isSingleItem = true;
-    }
-    console.log(isSingleItem)
-    let successfulAPICall = false; 
-    const url = "https://api.warframe.market/v1/items/" + underscoreId;
-    const statistics = "/statistics";
+    let successfulAPICall = false;
+
+    // Database Call
+    const url = "/api/test/" + underscoreId;
     const itemResults = await fetch(url);
     const itemJson = await itemResults.json();
-    if(itemResults.status === 200) {
+
+
+    if (!underscoreId.endsWith("_set")) {
+      isSingleItem = true;
+    }  
+    if(itemJson !== null) {
       successfulAPICall = true;
     }
     else {
       this.setState({successfulAPICall: false});
       return;
     }
-    const statisticsResult = await fetch(url + statistics);
-    const statisticsJson = await statisticsResult.json();
-    const ninetyDays = statisticsJson.payload.statistics_closed["90days"];
-    const fortyEightHours = statisticsJson.payload.statistics_closed["48hours"];
-    this.getNinetyDaysData(ninetyDays);
-    this.getFortyEightHoursData(fortyEightHours);
+
+    const imgUrl = this.getImage(itemJson);
+    const relics = this.getRelics(itemJson);
     const tradingTax = this.getTradingTax(itemJson);
     const ducats = this.getDucats(itemJson);
-    const relics = this.getRelics(itemJson, underscoreId);
-    const imgCall = "https://api.warframe.market/static/assets/"
-    let imgUrl = this.getImage(itemJson, underscoreId);
-    imgUrl = imgCall + imgUrl;    
-    this.setState({item : statisticsJson.payload.statistics_closed, ninetyDays, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem});
+
+    const ninetyDays = itemJson["90day"];
+    const fortyEightHours = itemJson["48hr"];
+    this.getNinetyDaysData(ninetyDays);
+    this.getFortyEightHoursData(fortyEightHours);
+
+
+
+
+    this.setState({item : itemJson, ninetyDays, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem});
   }
-  getImage(itemJson, underscoreId) {
-    let imageUrl = ""
-    itemJson.payload.item.items_in_set.forEach( (item) => {
-      if (underscoreId === item.url_name) {
-        imageUrl = item.thumb;
-      }
-    })
-    return imageUrl
+  getImage(itemJson) {
+    return itemJson.img_url
   }
-  getRelics(itemJson, underscoreId) {
-    let relicsList = []
-    itemJson.payload.item.items_in_set.forEach( (item) => {
-      if (underscoreId === item.url_name) {
-        return item.en.drop.forEach( (drop) => {
-          relicsList.push(drop.name)
-        })
-      }
-    })
-    return relicsList
+  getRelics(itemJson) {
+    return itemJson.relics;
   }
   getTradingTax(itemJson) {
-    let totalTradingTax = 0
-    for(let x=0 ; x<4; x++) {
-      totalTradingTax += itemJson.payload.item.items_in_set[x].trading_tax
-    }
-    return totalTradingTax;
+    return itemJson.trading_tax;
   }
   getDucats(itemJson) {
-    let totalDucats = 0
-    for(let x=0; x<4; x++) {
-      totalDucats += itemJson.payload.item.items_in_set[x].ducats
-    }
-    return totalDucats
+    return itemJson.ducats
   }
 
   getNinetyDaysData(ninetyDays) {
@@ -113,12 +96,12 @@ class ItemInfo extends React.Component {
     let ninetyDaysMax = 0;
     ninetyDays.map((day) => {
       counter ++;
-      total += day.avg_price;
-      if (day.min_price < ninetyDaysMin) {
-        ninetyDaysMin = day.min_price;
+      total += day.avg;
+      if (day.min < ninetyDaysMin) {
+        ninetyDaysMin = day.min;
       }
-      if (day.max_price > ninetyDaysMax) {
-        ninetyDaysMax = day.max_price;
+      if (day.max > ninetyDaysMax) {
+        ninetyDaysMax = day.max;
       }
         return null;
     })
@@ -132,12 +115,12 @@ class ItemInfo extends React.Component {
     let fortyEightHoursMax = 0;
     fortyEightHours.map((day) => {
       counter ++;
-      total += day.avg_price;
-      if (day.min_price < fortyEightHoursMin) {
-        fortyEightHoursMin = day.min_price;
+      total += day.avg;
+      if (day.min < fortyEightHoursMin) {
+        fortyEightHoursMin = day.min;
       }
-      if (day.max_price > fortyEightHoursMax) {
-        fortyEightHoursMax = day.max_price;
+      if (day.max > fortyEightHoursMax) {
+        fortyEightHoursMax = day.max;
       }
         return null;
     })
