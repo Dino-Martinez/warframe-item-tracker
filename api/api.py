@@ -3,26 +3,11 @@ from flask_pymongo import PyMongo
 from bson.objectid import ObjectId
 from bson.json_util import dumps
 import os
-import requests
-import time
 
 app = Flask(__name__)
-host = os.environ.get('MONGODB_URI', 'mongodb://localhost:27017/userDatabase') + "?retryWrites=false"
+host = os.environ.get('MONGODB_URI', 'mongodb://localhost:27017/itemDatabase') + "?retryWrites=false"
 app.config["MONGO_URI"] = host
 mongo = PyMongo(app)
-
-def populate_db():
-    for _ in range(15):
-        result = requests.get('http://api.warframe.market/v1/items')
-        json = result.json()
-
-        # build db from json
-
-
-        print(json)
-        time.sleep(1)
-
-populate_db()
 
 mongo.db.test.delete_many({})
 mongo.db.test.insert([
@@ -134,13 +119,13 @@ def api_test_data_watch_list():
 
 @app.route('/api/items/<item_id>')
 def item_data(item_id):
-    item = dumps(mongo.db.test.find_one({"item_id": item_id}))
+    item = dumps(mongo.db.items.find_one({"item_id": item_id}))
     return item
 
 @app.route('/api/watchlist/add/<item_id>')
 def add_to_watchlist(item_id):
     try:
-        result = mongo.db.test.update_one({'item_id': item_id}, {"$set": {'isWatched': True}})
+        result = mongo.db.items.update_one({'item_id': item_id}, {"$set": {'isWatched': True}})
         print(result)
         return {"success": True}
     except:
@@ -149,12 +134,12 @@ def add_to_watchlist(item_id):
 @app.route('/api/watchlist/remove/<item_id>')
 def remove_from_watchlist(item_id):
     try:
-        result = mongo.db.test.update_one({'item_id': item_id}, {"$set": {'isWatched': False}})
+        result = mongo.db.items.update_one({'item_id': item_id}, {"$set": {'isWatched': False}})
         return {"success": True}
     except:
         return {"success": False}
 
 @app.route('/api/watchlist/list')
 def retrieve_watchlist():
-    items = dumps(mongo.db.test.find({'isWatched': True}))
+    items = dumps(mongo.db.items.find({'isWatched': True}))
     return items
