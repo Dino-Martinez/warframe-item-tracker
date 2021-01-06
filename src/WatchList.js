@@ -24,9 +24,8 @@ class WatchList extends React.Component {
 
   // Check periodically for api update, set state to new data
   async updateData() {
-    const result = await fetch('/api/');
+    const result = await fetch('/api/watchlist/list');
     const json = await result.json();
-    console.log(json);
     this.setState({ items: json });
   }
 
@@ -48,11 +47,11 @@ class WatchList extends React.Component {
             this.state.items.map((item) => {
               const styles = item.isUrgent ? "text-danger urgent" : "";
               return (
-                <tr key={item.id}>
+                <tr key={item.item_id}>
                   <td className={styles}>{item.name}</td>
-                  <td>{item.average}</td>
-                  <td>{item.min}</td>
-                  <td>{item.max}</td>
+                  <td>{item["90day"].avg}</td>
+                  <td>{item["90day"].min}</td>
+                  <td>{item["90day"].max}</td>
                 </tr>
               )
             })
