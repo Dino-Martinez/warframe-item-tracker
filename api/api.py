@@ -13,7 +13,7 @@ mongo = PyMongo(app)
 mongo.db.test.delete_many({})
 mongo.db.test.insert([
     {
-        "item_id": "test_name",
+        "item_id": "test_name_1",
         "name": "Test Name",
         "img_url": "https://api.warframe.market/static/assets/icons/en/thumbs/trinity_prime_neuroptics.4115dba418ab8ee70197a7fdaee8da76.128x128.png",
         "ducats": 500,
