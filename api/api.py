@@ -50,7 +50,7 @@ mongo.db.test.insert([
         "ducats": 250,
         "trading_tax": 520,
         "isUrgent": True,
-        "isWatched": False,
+        "isWatched": True,
         "items_in_set": [
             {"item_id": "test_name_1"},
             {"item_id": "test_name_3"},
@@ -81,7 +81,7 @@ mongo.db.test.insert([
         "ducats": 5000000,
         "trading_tax": 50000000,
         "isUrgent": False,
-        "isWatched": False,
+        "isWatched": True,
         "items_in_set": [
             {"item_id": "test_name_1"},
             {"item_id": "test_name_2"},
@@ -113,7 +113,7 @@ def api_test_data_single_item(item_id):
     return item
 
 
-@app.route('/api/test/item_list')
-def api_test_data_item_list():
-    items = dumps(mongo.db.test.find({}))
+@app.route('/api/test/watch_list')
+def api_test_data_watch_list():
+    items = dumps(mongo.db.test.find({"isWatched": True}))
     return items
