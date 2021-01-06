@@ -25,10 +25,10 @@ mongo.db.test.insert([
             {"item_id": "test_name_3"},
         ],
         "relics": [
-            "Test Relic",
-            "Test Relic",
-            "Test Relic",
-            "Test Relic",
+            "Test Relic 1",
+            "Test Relic 2",
+            "Test Relic 3",
+            "Test Relic 4",
         ],
         "48hr": [
             {"avg": 5, "min": 3, "max": 7},
@@ -56,10 +56,10 @@ mongo.db.test.insert([
             {"item_id": "test_name_3"},
         ],
         "relics": [
-            "Test Relic",
-            "Test Relic",
-            "Test Relic",
-            "Test Relic",
+            "Test Relic 1",
+            "Test Relic 2",
+            "Test Relic 3",
+            "Test Relic 4",
         ],
         "48hr": [
             {"avg": 5, "min": 3, "max": 7},
@@ -87,10 +87,10 @@ mongo.db.test.insert([
             {"item_id": "test_name_2"},
         ],
         "relics": [
-            "Test Relic",
-            "Test Relic",
-            "Test Relic",
-            "Test Relic",
+            "Test Relic 1",
+            "Test Relic 2",
+            "Test Relic 3",
+            "Test Relic 4",
         ],
         "48hr": [
             {"avg": 5, "min": 3, "max": 7},
