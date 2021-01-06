@@ -71,9 +71,6 @@ class ItemInfo extends React.Component {
     this.getNinetyDaysData(ninetyDays);
     this.getFortyEightHoursData(fortyEightHours);
 
-
-
-
     this.setState({item : itemJson, ninetyDays, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem});
   }
   getImage(itemJson) {
