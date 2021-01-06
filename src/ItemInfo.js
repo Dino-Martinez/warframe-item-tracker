@@ -45,7 +45,7 @@ class ItemInfo extends React.Component {
     let successfulAPICall = false;
 
     // Database Call
-    const url = "/api/test/" + underscoreId;
+    const url = "/api/items/" + underscoreId;
     const itemResults = await fetch(url);
     const itemJson = await itemResults.json();
 
@@ -60,6 +60,7 @@ class ItemInfo extends React.Component {
       this.setState({successfulAPICall: false});
       return;
     }
+
 
     const imgUrl = this.getImage(itemJson);
     const relics = this.getRelics(itemJson);

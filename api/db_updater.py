@@ -35,6 +35,7 @@ def update_watchlist():
         watched_items = list(db.items.find({'isWatched': True}))
 
         for item in watched_items:
+            print("updating...")
             url = f'http://api.warframe.market/v1/items/{item["item_id"]}/statistics'
             result = requests.get(url)
             json = result.json()
@@ -45,7 +46,8 @@ def update_watchlist():
                 "48hr": stats["48hours"],
             }
 
-            db.items.update_one({{'item_id': item["item_id"]}, {"$set": new_item}})
+            db.items.update_one({'item_id': item["item_id"]}, {"$set": new_item})
+            print("updated")
 
         # do it every 5 seconds
         time.sleep(5)
