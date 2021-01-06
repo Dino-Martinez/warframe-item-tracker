@@ -124,20 +124,15 @@ def item_data(item_id):
 
 @app.route('/api/watchlist/add/<item_id>')
 def add_to_watchlist(item_id):
-    try:
-        result = mongo.db.items.update_one({'item_id': item_id}, {"$set": {'isWatched': True}})
-        print(result)
-        return {"success": True}
-    except:
-        return {"success": False}
+    result = mongo.db.items.update_one({'item_id': item_id}, {"$set": {'isWatched': True}})
+    success = result.matched_count > 0
+    return {"success": success}
 
 @app.route('/api/watchlist/remove/<item_id>')
 def remove_from_watchlist(item_id):
-    try:
-        result = mongo.db.items.update_one({'item_id': item_id}, {"$set": {'isWatched': False}})
-        return {"success": True}
-    except:
-        return {"success": False}
+    result = mongo.db.items.update_one({'item_id': item_id}, {"$set": {'isWatched': False}})
+    success = result.matched_count > 0
+    return {"success": success}
 
 @app.route('/api/watchlist/list')
 def retrieve_watchlist():
