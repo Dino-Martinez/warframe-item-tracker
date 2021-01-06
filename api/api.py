@@ -107,9 +107,9 @@ mongo.db.test.insert([
     },
 ])
 
-@app.route('/api/test/single_item')
-def api_test_data_single_item():
-    item = dumps(mongo.db.test.find_one({"item_id": "test_name_2"}))
+@app.route('/api/test/<item_id>')
+def api_test_data_single_item(item_id):
+    item = dumps(mongo.db.test.find_one({"item_id": item_id}))
     return item
 
 
