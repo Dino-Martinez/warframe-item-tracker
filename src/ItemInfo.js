@@ -9,12 +9,8 @@ class ItemInfo extends React.Component {
       successfulAPICall: false,
       isSingleItem: true,
       item: {},
-      ninetyDaysAverage: 0,
-      ninetyDaysMin: 0,
-      ninetyDaysMax: 0,
-      fortyEightHoursAverage: 0,
-      fortyEightHoursMin: 0,
-      fortyEightHoursMax: 0,
+      ninetyDays: {},
+      fortyEightHours: {},
       tradingTax: 0,
       ducats: 0,
       relics: [],
@@ -69,10 +65,8 @@ class ItemInfo extends React.Component {
 
     const ninetyDays = itemJson["90day"];
     const fortyEightHours = itemJson["48hr"];
-    this.getNinetyDaysData(ninetyDays);
-    this.getFortyEightHoursData(fortyEightHours);
 
-    this.setState({item : itemJson, ninetyDays, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName});
+    this.setState({item : itemJson, ninetyDays, fortyEightHours, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName});
   }
   getItemName(itemJson) {
     return
@@ -88,45 +82,6 @@ class ItemInfo extends React.Component {
   }
   getDucats(itemJson) {
     return itemJson.ducats
-  }
-
-  getNinetyDaysData(ninetyDays) {
-    let counter = 0;
-    let total = 0;
-    let ninetyDaysMin = 10000;
-    let ninetyDaysMax = 0;
-    ninetyDays.map((day) => {
-      counter ++;
-      total += day.avg;
-      if (day.min < ninetyDaysMin) {
-        ninetyDaysMin = day.min;
-      }
-      if (day.max > ninetyDaysMax) {
-        ninetyDaysMax = day.max;
-      }
-        return null;
-    })
-    let ninetyDaysAverage = total/counter;
-    this.setState ({ninetyDaysAverage, ninetyDaysMin, ninetyDaysMax})
-  }
-  getFortyEightHoursData(fortyEightHours) {
-    let counter = 0;
-    let total = 0;
-    let fortyEightHoursMin = 10000;
-    let fortyEightHoursMax = 0;
-    fortyEightHours.map((day) => {
-      counter ++;
-      total += day.avg;
-      if (day.min < fortyEightHoursMin) {
-        fortyEightHoursMin = day.min;
-      }
-      if (day.max > fortyEightHoursMax) {
-        fortyEightHoursMax = day.max;
-      }
-        return null;
-    })
-    let fortyEightHoursAverage = total/counter;
-    this.setState ({fortyEightHoursAverage, fortyEightHoursMin, fortyEightHoursMax})
   }
 
   render() {
@@ -154,16 +109,16 @@ class ItemInfo extends React.Component {
                 <div className="col-sm-6 content"><strong>Last 90 Days</strong></div>
               </div>
               <div className="row">
-                <div className="col-sm-6 content">Average Price: {this.state.fortyEightHoursAverage.toFixed(2)}</div>
-                <div className="col-sm-6 content">Average Price: {this.state.ninetyDaysAverage.toFixed(2)}</div>
+                <div className="col-sm-6 content">Average Price: {this.state.fortyEightHours.avg.toFixed(2)}</div>
+                <div className="col-sm-6 content">Average Price: {this.state.ninetyDays.avg.toFixed(2)}</div>
               </div>
               <div className="row">
-                <div className="col-sm-6 content">Min Price: {this.state.fortyEightHoursMin}</div>
-                <div className="col-sm-6 content">Min Price: {this.state.ninetyDaysMin}</div>
+                <div className="col-sm-6 content">Min Price: {this.state.fortyEightHours.min}</div>
+                <div className="col-sm-6 content">Min Price: {this.state.ninetyDays.min}</div>
               </div>
               <div className="row">
-                <div className="col-sm-6 content">Max Price: {this.state.fortyEightHoursMax}</div>
-                <div className="col-sm-6 content">Max Price: {this.state.ninetyDaysMax}</div>
+                <div className="col-sm-6 content">Max Price: {this.state.fortyEightHours.max}</div>
+                <div className="col-sm-6 content">Max Price: {this.state.ninetyDays.max}</div>
               </div>
               <div className="row">
                 <div className="col-sm-6 content"><strong>Ducats</strong></div>
