@@ -18,8 +18,10 @@ a React App for spying on the price of items on the warframe market
 - Paginate watchlist
 
 ## TODO:
-- Finish building db periodically from api call
-- Add front end CRUD for watchlist (add/remove buttons)
+- Finish building db periodically from api call ✓
+- Add front end CRUD for watchlist (add/remove buttons) ✓
+- Clean up codebase
+- Loading screen animation
 - Display information if an api call/db query is bad
 - Add urgency check in backend for the watchlist
 - Add notifications table on watch list for items that are urgent
