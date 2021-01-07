@@ -1,3 +1,4 @@
+""" This file will query the api periodically and update our database accordingly """
 import pymongo
 import os
 import requests
@@ -6,6 +7,7 @@ import time
 client = pymongo.MongoClient("localhost", 27017)
 db = client.itemDatabase
 
+# update all items, will only happen once. This only gets minimal data
 def update_items():
     db.items.drop()
     result = requests.get('http://api.warframe.market/v1/items')
@@ -20,8 +22,9 @@ def update_items():
             "img_url": f'https://api.warframe.market/static/assets/{api_item["thumb"]}',
             "ducats": 500,
             "trading_tax": 500,
-            "isUrgent": False,
-            "isWatched": False,
+            "is_urgent": False,
+            "is_watched": False,
+            "needs_stats": False,
             "items_in_set": [],
             "relics": [],
             "48hr": {
@@ -40,9 +43,10 @@ def update_items():
 
         db.items.insert_one(db_item)
 
+# update deeper statistics on watched items, this happens periodically
 def update_watchlist():
     while True:
-        watched_items = list(db.items.find({'isWatched': True}))
+        watched_items = list(db.items.find( {'$or': [ { 'is_watched': True }, { 'needs_stats': True } ] }))
 
         for watched_item in watched_items:
             stats_url = f'http://api.warframe.market/v1/items/{watched_item["item_id"]}/statistics'
@@ -60,6 +64,7 @@ def update_watchlist():
             daily_avg = 0
             daily_min = 10000000000
             daily_max = -1
+            isUrgent = False
 
             for hour in stats["48hours"]:
                 hour_data = {
@@ -110,7 +115,7 @@ def update_watchlist():
             trading_tax = 0
             item_ids = []
             relics = []
-            
+
             for item in set:
                 if item["en"]["item_name"] == watched_item["name"]:
                     try:
@@ -129,11 +134,14 @@ def update_watchlist():
             except:
                 pass
 
+            isUrgent = hourly_min < hourly_avg
+
             new_item = {
                 "ducats": ducats,
                 "trading_tax": trading_tax,
                 "items_in_set": item_ids,
                 "relics": relics,
+                "is_urgent": isUrgent,
                 "90day": {
                     "avg": daily_avg,
                     "min": daily_min,
