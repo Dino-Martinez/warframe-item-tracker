@@ -110,7 +110,7 @@ def update_watchlist():
             trading_tax = 0
             item_ids = []
             relics = []
-
+            
             for item in set:
                 if item["en"]["item_name"] == watched_item["name"]:
                     try:
@@ -124,7 +124,10 @@ def update_watchlist():
                 else:
                     item_url = item["en"]["item_name"].strip().replace(" ", "_").lower()
                     item_ids.append(item_url)
-
+            try:
+                trading_tax = set[0]["trading_tax"]
+            except:
+                pass
 
             new_item = {
                 "ducats": ducats,
@@ -148,7 +151,7 @@ def update_watchlist():
             db.items.update_one({'item_id': watched_item["item_id"]}, {"$set": new_item})
 
         # do it every 5 seconds
-        time.sleep(5)
+        time.sleep(2)
 
 update_items()
 update_watchlist()

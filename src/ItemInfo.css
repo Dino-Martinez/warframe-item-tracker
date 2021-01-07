@@ -12,7 +12,8 @@
 .row *{
   margin: 10px 0px;
 }
-div h3 {
+.btn-name {
   display:flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
 }
