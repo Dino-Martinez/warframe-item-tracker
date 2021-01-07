@@ -45,9 +45,8 @@ class ItemInfo extends React.Component {
     const url = "/api/items/" + itemId;
     const itemResults = await fetch(url);
     const itemJson = await itemResults.json();
-
-
-    if (!itemId.endsWith("_set")) {
+    console.log(itemId)
+    if (!itemId.endsWith("_set") && (!itemId.includes("lith_")) && (!itemId.includes("meso_")) && (!itemId.includes("neo_")) && (!itemId.includes("axi_"))) {
       isSingleItem = true;
     }  
     if(itemJson !== null) {
@@ -63,14 +62,17 @@ class ItemInfo extends React.Component {
     const relics = this.getRelics(itemJson);
     const tradingTax = this.getTradingTax(itemJson);
     const ducats = this.getDucats(itemJson);
+    itemName = this.getItemName(itemJson);
 
     const ninetyDays = itemJson["90day"];
     const fortyEightHours = itemJson["48hr"];
 
+    console.log(relics.length)
+
     this.setState({item : itemJson, ninetyDays, fortyEightHours, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName, itemId});
   }
   getItemName(itemJson) {
-    return
+    return itemJson.name
   }
   getImage(itemJson) {
     return itemJson.img_url
@@ -86,7 +88,6 @@ class ItemInfo extends React.Component {
   }
   async addItem(itemId) {
     const result = await fetch('/api/watchlist/add/' + itemId)
-    console.log("added")
 
     return
   }
@@ -101,6 +102,7 @@ class ItemInfo extends React.Component {
       );
     }
     else {
+      console.log(this.state.isSingleItem)
       return (
         <div>
           <SearchBar />
@@ -115,44 +117,67 @@ class ItemInfo extends React.Component {
             &&(
             <div className="container">
               <div className="row">
+              {this.state.fortyEightHours.min !== 10000000000
+              &&(
                 <div className="col-sm-6 content"><strong>Last 48 Hours</strong></div>
+              )}
                 <div className="col-sm-6 content"><strong>Last 90 Days</strong></div>
               </div>
               <div className="row">
+              {this.state.fortyEightHours.min !== 10000000000
+              &&(
                 <div className="col-sm-6 content">Average Price: {this.state.fortyEightHours.avg.toFixed(2)}</div>
+              )}
                 <div className="col-sm-6 content">Average Price: {this.state.ninetyDays.avg.toFixed(2)}</div>
               </div>
               <div className="row">
+              {this.state.fortyEightHours.min !== 10000000000
+              &&(
                 <div className="col-sm-6 content">Min Price: {this.state.fortyEightHours.min}</div>
+              )}
                 <div className="col-sm-6 content">Min Price: {this.state.ninetyDays.min}</div>
               </div>
               <div className="row">
+              {this.state.fortyEightHours.min !== 10000000000
+              &&(
                 <div className="col-sm-6 content">Max Price: {this.state.fortyEightHours.max}</div>
+              )}
                 <div className="col-sm-6 content">Max Price: {this.state.ninetyDays.max}</div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6 content"><strong>Ducats</strong></div>
-                <div className="col-sm-6 content"><strong>Trading Tax</strong></div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6 content">{this.state.ducats}</div>
-                <div className="col-sm-6 content">{this.state.tradingTax}</div>
               </div>
               {this.state.isSingleItem
               &&(
                 <div>
                   <div className="row">
-                    <div className="col-sm-6 content"><strong>Aquisition</strong></div>
+                  {this.state.ducats > -1
+                  &&(
+                    <div className="col-sm-6 content"><strong>Ducats</strong></div>
+                  )}
+                    <div className="col-sm-6 content"><strong>Trading Tax</strong></div>
                   </div>
-                    {
-                      this.state.relics.map ( (relic) => {
-                        return (
-                          <div key={relic.name} className="row">
-                            <div className="col-sm-6 content">{relic.name}</div>
-                          </div>
-                        )
-                      })
-                    }
+                  <div className="row">
+                  {this.state.ducats > -1
+                  &&(
+                    <div className="col-sm-6 content">{this.state.ducats}</div>
+                  )}
+                    <div className="col-sm-6 content">{this.state.tradingTax}</div>
+                  </div>
+                  {this.state.relics.length > 0
+                  &&(
+                    <div>
+                      <div className="row">
+                        <div className="col-sm-6 content"><strong>Aquisition</strong></div>
+                      </div>
+                        {
+                          this.state.relics.map ( (relic) => {
+                            return (
+                              <div key={relic.name} className="row">
+                                <div className="col-sm-6 content">{relic.name}</div>
+                              </div>
+                            )
+                          })
+                        }
+                      </div>
+                    )}
                 </div>
               )}
             </div>
