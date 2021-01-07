@@ -48,7 +48,7 @@ class SearchBar extends React.Component {
     const url = window.location.href;
     const newQuery = url.substring(30);
 
-    if(this.state.enterPressed && this.state.query !== newQuery) {
+    if(this.state.enterPressed && this.state.query !== newQuery && this.state.query.trim() !== "") {
       this.props.history.push("/items/" + this.state.query);
     }
     return(
