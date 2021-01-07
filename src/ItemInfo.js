@@ -7,6 +7,7 @@ class ItemInfo extends React.Component {
     super();
     this.state = {
       successfulAPICall: false,
+      waiting: true,
       isSingleItem: true,
       item: {},
       ninetyDays: {},
@@ -39,23 +40,22 @@ class ItemInfo extends React.Component {
     const itemId = itemName.trim().toLowerCase().split(" ").join("_");
 
     let isSingleItem = false;
-    let successfulAPICall = false;
+    let successfulAPICall = true;
 
     // Database Call
     const url = "/api/items/" + itemId;
     const itemResults = await fetch(url);
-    const itemJson = await itemResults.json();
-    console.log(itemId)
+    let itemJson = {}
+    try {
+      itemJson = await itemResults.json();
+    }
+    catch(e) {
+      this.setState({successfulAPICall: false, waiting:false});
+      return
+    }
     if (!itemId.endsWith("_set") && (!itemId.includes("lith_")) && (!itemId.includes("meso_")) && (!itemId.includes("neo_")) && (!itemId.includes("axi_"))) {
       isSingleItem = true;
     }  
-    if(itemJson !== null) {
-      successfulAPICall = true;
-    }
-    else {
-      this.setState({successfulAPICall: false});
-      return;
-    }
 
 
     const imgUrl = this.getImage(itemJson);
@@ -67,9 +67,7 @@ class ItemInfo extends React.Component {
     const ninetyDays = itemJson["90day"];
     const fortyEightHours = itemJson["48hr"];
 
-    console.log(relics.length)
-
-    this.setState({item : itemJson, ninetyDays, fortyEightHours, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName, itemId});
+    this.setState({item : itemJson, waiting: false, ninetyDays, fortyEightHours, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName, itemId});
   }
   getItemName(itemJson) {
     return itemJson.name
@@ -87,22 +85,25 @@ class ItemInfo extends React.Component {
     return itemJson.ducats
   }
   async addItem(itemId) {
-    const result = await fetch('/api/watchlist/add/' + itemId)
-
+    await fetch('/api/watchlist/add/' + itemId)
     return
   }
 
   render() {
+    if (this.state.waiting === true) {
+      return (
+        <h3 className="loading">Loading...</h3>
+      )
+    }
     if (this.state.successfulAPICall !== true) {
       return (
         <div>
-          <p>This API Call sucks</p>
+          <p className="error-code">This API Call sucks</p>
           <SearchBar />
         </div>
       );
     }
     else {
-      console.log(this.state.isSingleItem)
       return (
         <div>
           <SearchBar />
