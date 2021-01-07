@@ -21,6 +21,13 @@ class ItemInfo extends React.Component {
     };
   }
 
+  componentWillReceiveProps(newProps) {
+    // Display the loading animation every time something is input
+    if (this.props.match.params.itemName !== newProps.match.params.itemName) {
+      this.setState({waiting: true})
+    }
+  }
+
   componentDidUpdate(prevProps) {
     // After the component updates (page load from "item info page"), we grab the search query and convert it to a format that our API can understand
     if(prevProps.match.params.itemName !== this.props.match.params.itemName) {
@@ -55,7 +62,7 @@ class ItemInfo extends React.Component {
     }
     if (!itemId.endsWith("_set") && (!itemId.includes("lith_")) && (!itemId.includes("meso_")) && (!itemId.includes("neo_")) && (!itemId.includes("axi_"))) {
       isSingleItem = true;
-    }  
+    }
 
 
     const imgUrl = this.getImage(itemJson);
@@ -92,13 +99,16 @@ class ItemInfo extends React.Component {
   render() {
     if (this.state.waiting === true) {
       return (
-        <h3 className="loading">Loading...</h3>
+        <div className="container h1 text-center mt-5">
+          <h3 className="text-info loading">Loading...</h3>
+          <div id="loading-bar"><div id="progress"></div></div>
+        </div>
       )
     }
     if (this.state.successfulAPICall !== true) {
       return (
-        <div>
-          <p className="error-code">This API Call sucks</p>
+        <div className="container h1 text-center mt-5">
+          <p className="text-danger">We could not find the item you requested.</p>
           <SearchBar />
         </div>
       );

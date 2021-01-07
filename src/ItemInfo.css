@@ -17,3 +17,22 @@
   flex-direction: column;
   align-items: center;
 }
+#loading-bar {
+  height: 24px;
+  width: 100%;
+  background: #333;
+}
+#loading-bar > #progress{
+  height:24px;
+  width: 0;
+  background: #f2618f;
+  animation: loading 1s ease-in-out 0s infinite alternate;
+}
+@keyframes loading {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}

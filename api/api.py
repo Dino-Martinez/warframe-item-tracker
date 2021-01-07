@@ -4,6 +4,7 @@ from bson.objectid import ObjectId
 from bson.json_util import dumps
 import os
 import requests
+import time
 
 app = Flask(__name__)
 host = os.environ.get('MONGODB_URI', 'mongodb://localhost:27017/itemDatabase') + "?retryWrites=false"
@@ -120,8 +121,6 @@ def api_test_data_watch_list():
 
 @app.route('/api/items/<item_id>')
 def item_data(item_id):
-
-    print("enterede")
     stats_url = f'http://api.warframe.market/v1/items/{item_id}/statistics'
     stats_result = requests.get(stats_url)
     stats_json = stats_result.json()

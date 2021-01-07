@@ -38,17 +38,17 @@ class SearchBar extends React.Component {
     /*This will give me something to avoid dom warnings*/
     const url = window.location.href;
     const newQuery = url.substring(30);
-    
+
 
     if(this.state.enterPressed && this.state.query !== newQuery) {
       this.props.history.push("/items/" + this.state.query);
     }
-    
+
     return(
       <div>
         <div className="jumbotron form-group">
           <input type="text"  className="form-control" value={this.state.query} onChange={this.updateQuery} />
-          <Link to ={"/items/" + this.state.query} ><img src={icon} height="30" width="30" alt="Search Button"></img></Link>
+          <Link to={"/items/" + this.state.query} ><img src={icon} height="30" width="30" alt="Search Button"></img></Link>
         </div>
       </div>
     );
