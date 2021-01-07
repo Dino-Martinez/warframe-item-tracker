@@ -25,3 +25,4 @@ a React App for spying on the price of items on the warframe market
 - Add notifications table on watch list for items that are urgent
 - Tackle extras
 - Convert backend to Express
+- Refactor Item Page layout
