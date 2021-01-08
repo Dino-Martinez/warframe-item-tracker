@@ -15,6 +15,10 @@ class WatchList extends React.Component {
   }
 
   componentDidMount() {
+    /**
+     * this updates our data at our set interval
+     * LIMIT: 3 requests/second
+     */
     this.updateData();
     this.intervalID = setInterval(this.updateData, 2000);
   }
@@ -22,10 +26,12 @@ class WatchList extends React.Component {
   componentWillUnmount() {
     clearInterval(this.intervalID);
   }
-
-
   // Check periodically for api update, set state to new data
   async updateData() {
+    /**
+    * retrieves json data from flask, and updates our state variable
+    * @return {dict}
+    */
     const result = await fetch('/api/watchlist/list');
     const json = await result.json();
     this.setState({ items: json });
@@ -37,7 +43,8 @@ class WatchList extends React.Component {
   render() {
     return (
       <div className="container text-center mt-5">
-        <h2>Watched Items:</h2>
+        
+        <h2>Important Items:</h2>
         <table className="table table-bordered table-striped">
           <thead className="thead-dark">
             <tr>
@@ -52,9 +59,39 @@ class WatchList extends React.Component {
           {
             this.state.items.map((item) => {
               const styles = item.isUrgent ? "text-danger urgent" : "";
+              if (item.isUrgent) {
+                return (
+                  <tr key={item.item_id}>
+                    <td className={styles}>{item.name}</td>
+                    <td>{item["90day"].avg}</td>
+                    <td>{item["90day"].min}</td>
+                    <td>{item["90day"].max}</td>
+                    <td><p onClick={() => this.removeItem(item.item_id)}>X</p></td>
+                  </tr>
+                )
+              }
+            })
+          }
+          </tbody>
+        </table>
+
+        <h2>Watched Items:</h2>
+        <table className="table table-bordered table-striped">
+          <thead className="thead-dark">
+            <tr>
+              <th>Name</th>
+              <th>Average Price</th>
+              <th>Min. Price</th>
+              <th>Max. Price</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+          {
+            this.state.items.map((item) => {
               return (
                 <tr key={item.item_id}>
-                  <td className={styles}>{item.name}</td>
+                  <td>{item.name}</td>
                   <td>{item["90day"].avg}</td>
                   <td>{item["90day"].min}</td>
                   <td>{item["90day"].max}</td>

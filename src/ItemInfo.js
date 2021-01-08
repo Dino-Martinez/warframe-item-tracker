@@ -23,77 +23,93 @@ class ItemInfo extends React.Component {
 
   componentWillReceiveProps(newProps) {
     /**
-    * this ensures our page does not reload if the current url is the same as the next url
-    * @param {dict} props
-    * @return {bool}
-    */
+     * this ensures our page does not reload if the current url is the same as the next url
+     * @param {dict} props
+     * @return {bool}
+     */
+    
     if (this.props.match.params.itemName !== newProps.match.params.itemName) {
+      // fetch('/api/items/track/' + newProps.match.params.itemName)
       this.setState({waiting: true})
     }
   }
 
   componentDidUpdate(prevProps) {
     /**
-    * After the component updates (page load from "item info page"), we grab the search query and convert it to a format that our API can understand
-    * @param {dict} props
-    * @return {bool}
-    */
+     * After the component updates (page load from "item info page"), we grab the search query and convert it to a format that our API can understand
+     * @param {dict} props
+     * @return {bool}
+     */
     if(prevProps.match.params.itemName !== this.props.match.params.itemName) {
       const { match: { params: { itemName } } } = this.props;
+      const itemId = prevProps.match.params.itemName.trim().toLowerCase().split(" ").join("_");
+      fetch('/api/items/untrack/' + itemId)
       this.retrieveData(itemName);
     }
   }
 
   componentDidMount() {
     /**
-    * After the component mounts (page load from HOME), we grab the search query and convert it to a format that our API can understand
-    * @return {dict}
-    */
+     * After the component mounts (page load from HOME), we grab the search query and convert it to a format that our API can understand
+     * @return {dict}
+     */
     const { match: { params: { itemName } } } = this.props;
     this.retrieveData(itemName);
   }
 
+  componentWillUnmount() {
+    /**
+     * If the component is being redirected to a new url, we untrack the current item so that stats will not be updated anymore
+     * @return {dict}
+     */
+    const { match: { params: { itemName } } } = this.props;
+    const itemId = itemName.trim().toLowerCase().split(" ").join("_");
+    fetch('/api/items/untrack/' + itemId)
+  }
+
   async retrieveData(itemName) {
     /**
-    * This function retrieves data from our flask route that calls to our database held in api.py
-    * @param {string} itemName
-    * @return {dict}
-    */
-
-    let isSingleItem = false;
-    let successfulAPICall = true;
-
-    // Database Call
+     * This function retrieves data from our flask route that calls to our database held in api.py
+     * @param {string} itemName
+     * @return {dict}
+     */
     const itemId = itemName.trim().toLowerCase().split(" ").join("_");
-    const url = "/api/items/" + itemId;
-    const itemResults = await fetch(url);
+    await fetch('/api/items/track/' + itemId)
+    setTimeout(async() => {
 
-    //if itemResults is bad, we update our state for loading screen and error handling
-    let itemJson = {}
-    try {
-      itemJson = await itemResults.json();
-    }
-    catch(e) {
-      this.setState({successfulAPICall: false, waiting:false});
-      return
-    }
-    // since certain items do not have the same attributes, we use this for filtering
-    if (!itemId.endsWith("_set") && (!itemId.includes("lith_")) && (!itemId.includes("meso_")) && (!itemId.includes("neo_")) && (!itemId.includes("axi_"))) {
-      isSingleItem = true;
-    }
+      let isSingleItem = false;
+      let successfulAPICall = true;
 
-    const ninetyDays = itemJson["90day"];
-    const fortyEightHours = itemJson["48hr"];
+      // Database Call
+      const url = "/api/items/" + itemId;
+      const itemResults = await fetch(url);
+      
 
-    // helper functions
-    const imgUrl = this.getImage(itemJson);
-    const relics = this.getRelics(itemJson);
-    const tradingTax = this.getTradingTax(itemJson);
-    const ducats = this.getDucats(itemJson);
-    itemName = this.getItemName(itemJson);
+      //if there is a bad search query, we display an error message
+      let itemJson = await itemResults.json()
+      itemJson = itemJson.shift()
+      if (itemJson === undefined) {
+        this.setState({successfulAPICall: false, waiting:false})
+        return
+      }
+      
+      // this allows us to be more descriptive with which items have available stats from the API
+      if (!itemId.endsWith("_set") && (!itemId.includes("lith_")) && (!itemId.includes("meso_")) && (!itemId.includes("neo_")) && (!itemId.includes("axi_"))) {
+        isSingleItem = true;
+      }
+      const ninetyDays = itemJson["90day"];
+      const fortyEightHours = itemJson["48hr"];
 
-    this.setState({item : itemJson, waiting: false, ninetyDays, fortyEightHours, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName, itemId});
+      // helper functions
+      const imgUrl = this.getImage(itemJson);
+      const relics = this.getRelics(itemJson);
+      const tradingTax = this.getTradingTax(itemJson);
+      const ducats = this.getDucats(itemJson);
+      itemName = this.getItemName(itemJson);
+      this.setState({item : itemJson, waiting: false, ninetyDays, fortyEightHours, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName, itemId});
+    }, 2000);
   }
+
 
   getItemName(itemJson) {
      /**
@@ -148,7 +164,7 @@ class ItemInfo extends React.Component {
         </div>
       )
     }
-    if (this.state.successfulAPICall !== true) {
+    if (this.state.successfulAPICall === false) {
       return (
         <div className="container h1 text-center mt-5">
           <p className="text-danger">We could not find the item you requested.</p>
