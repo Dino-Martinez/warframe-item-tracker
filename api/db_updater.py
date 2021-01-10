@@ -20,25 +20,15 @@ def update_items():
             "item_id": api_item["url_name"],
             "name": api_item["item_name"],
             "img_url": f'https://api.warframe.market/static/assets/{api_item["thumb"]}',
-            "ducats": 500,
-            "trading_tax": 500,
+            "ducats": api_item["ducats"],
+            "trading_tax": api_item["trading_tax"],
             "is_urgent": False,
             "is_watched": False,
             "needs_stats": False,
             "items_in_set": [],
-            "relics": [],
-            "48hr": {
-                "avg": 0,
-                "min": 0,
-                "max": 0,
-                "hourly": [],
-            },
-            "90day": {
-                "avg": 0,
-                "min": 0,
-                "max": 0,
-                "hourly": [],
-            },
+            "relics": api_item["en"]["drop"],
+            "max_mod_rank": api_item["mod_max_rank"],
+            "order_history": [],
         }
 
         db.items.insert_one(db_item)
@@ -142,18 +132,12 @@ def update_watchlist():
                 "items_in_set": item_ids,
                 "relics": relics,
                 "is_urgent": isUrgent,
-                "90day": {
-                    "avg": daily_avg,
-                    "min": daily_min,
-                    "max": daily_max,
-                    "daily": daily_data,
-                },
-                "48hr": {
-                    "avg": hourly_avg,
-                    "min": hourly_min,
-                    "max": hourly_max,
-                    "hourly": hourly_data,
-                },
+                "order_history": [
+                  {
+                    "platinum": 0,
+                    "mod_rank": -1,
+                  }
+                ]
             }
 
             db.items.update_one({'item_id': watched_item["item_id"]}, {"$set": new_item})
