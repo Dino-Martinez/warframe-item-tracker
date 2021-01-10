@@ -11,6 +11,8 @@ from bson.json_util import dumps
 import os
 import requests
 import time
+import asyncio
+
 
 # Setup flask app and pymongo database
 app = Flask(__name__)
@@ -57,3 +59,9 @@ def remove_from_watchlist(item_id):
 def retrieve_watchlist():
     items = dumps(mongo.db.items.find({'is_watched': True}))
     return items
+
+# Route to deliver all items
+@app.route('/api/items')
+def retrieve_all_items():
+  items = dumps(mongo.db.items.find({}))
+  return items
