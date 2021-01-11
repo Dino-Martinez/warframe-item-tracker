@@ -63,9 +63,9 @@ class WatchList extends React.Component {
                 return (
                   <tr key={item.item_id}>
                     <td className={styles}>{item.name}</td>
-                    <td>{item["90day"].avg}</td>
-                    <td>{item["90day"].min}</td>
-                    <td>{item["90day"].max}</td>
+                    <td>{item.avg_price}</td>
+                    <td>{item.min_price}</td>
+                    <td>{item.max_price}</td>
                     <td><p onClick={() => this.removeItem(item.item_id)}>X</p></td>
                   </tr>
                 )
@@ -92,9 +92,9 @@ class WatchList extends React.Component {
               return (
                 <tr key={item.item_id}>
                   <td>{item.name}</td>
-                  <td>{item["90day"].avg}</td>
-                  <td>{item["90day"].min}</td>
-                  <td>{item["90day"].max}</td>
+                  <td>{item.avg_price}</td>
+                  <td>{item.min_price}</td>
+                  <td>{item.max_price}</td>
                   <td><p onClick={() => this.removeItem(item.item_id)}>X</p></td>
                 </tr>
               )

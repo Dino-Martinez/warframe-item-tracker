@@ -75,43 +75,52 @@ class ItemInfo extends React.Component {
      * @return {dict}
      */
     const itemId = itemName.trim().toLowerCase().split(" ").join("_");
-    await fetch('/api/items/track/' + itemId)
-    setTimeout(async() => {
 
-      let isSingleItem = false;
-      let successfulAPICall = true;
+    let isSingleItem = false;
+    let successfulAPICall = true;
 
-      // Database Call
-      const url = "/api/items/" + itemId;
-      const itemResults = await fetch(url);
+    // Database Call
+    const url = "/api/items/" + itemId;
+    const itemResults = await fetch(url);
 
 
-      //if there is a bad search query, we display an error message
-      let itemJson = await itemResults.json()
-      itemJson = itemJson.shift()
-      if (itemJson === undefined) {
-        this.setState({successfulAPICall: false, waiting:false})
-        return
-      }
+    //if there is a bad search query, we display an error message
+    let itemJson = await itemResults.json()
+    itemJson = itemJson.shift()
+    if (itemJson === undefined) {
+      this.setState({successfulAPICall: false, waiting:false})
+      return
+    }
 
-      // this allows us to be more descriptive with which items have available stats from the API
-      if (!itemId.endsWith("_set") && (!itemId.includes("lith_")) && (!itemId.includes("meso_")) && (!itemId.includes("neo_")) && (!itemId.includes("axi_"))) {
-        isSingleItem = true;
-      }
-      const ninetyDays = itemJson["90day"];
-      const fortyEightHours = itemJson["48hr"];
+    // this allows us to be more descriptive with which items have available stats from the API
+    if (!itemId.endsWith("_set") && (!itemId.includes("lith_")) && (!itemId.includes("meso_")) && (!itemId.includes("neo_")) && (!itemId.includes("axi_"))) {
+      isSingleItem = true;
+    }
+    const ninetyDays = itemJson["90day"];
+    const fortyEightHours = itemJson["48hr"];
 
-      // helper functions
-      const imgUrl = this.getImage(itemJson);
-      const relics = this.getRelics(itemJson);
-      const tradingTax = this.getTradingTax(itemJson);
-      const ducats = this.getDucats(itemJson);
-      itemName = this.getItemName(itemJson);
-      this.setState({item : itemJson, waiting: false, ninetyDays, fortyEightHours, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName, itemId});
-    }, 2000);
+    // helper functions
+    const avgPrice = this.getAvgPrice(itemJson);
+    const minPrice = this.getMinPrice(itemJson);
+    const maxPrice = this.getMaxPrice(itemJson);
+    const imgUrl = this.getImage(itemJson);
+    const relics = this.getRelics(itemJson);
+    const tradingTax = this.getTradingTax(itemJson);
+    const ducats = this.getDucats(itemJson);
+    itemName = this.getItemName(itemJson);
+    this.setState({item : itemJson, waiting: false, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName, itemId, avgPrice, minPrice, maxPrice});
+
   }
 
-
+  getAvgPrice(itemJson) {
+    return itemJson.avg_price
+  }
+  getMinPrice(itemJson) {
+    return itemJson.min_price
+  }
+  getMaxPrice(itemJson) {
+    return itemJson.max_price
+  }
   getItemName(itemJson) {
      /**
      * @param {dict} json
@@ -190,6 +199,7 @@ class ItemInfo extends React.Component {
       ]
       return (
         <div>
+          <SearchBar />
           <div className ="item-img">
             <img src={this.state.imgUrl} alt="Item"></img>
           </div>
@@ -201,6 +211,18 @@ class ItemInfo extends React.Component {
             &&(
             <div className="container">
               <div className="row">
+                <div className="col-sm-6 content"><strong>Prices</strong></div>
+              </div>
+              <div className="row">
+                <div className="col-sm-6 content">Average Price: {this.state.avgPrice}</div>
+              </div>
+              <div className="row">
+                <div className="col-sm-6 content">Min Price: {this.state.minPrice}</div>
+              </div>
+              <div className="row">
+                <div className="col-sm-6 content">Max Price: {this.state.maxPrice}</div>
+              </div>
+              {/* <div className="row">
               {this.state.fortyEightHours.min !== 10000000000
               &&(
                 <div className="col-sm-6 content"><strong>Last 48 Hours</strong></div>
@@ -227,7 +249,7 @@ class ItemInfo extends React.Component {
                 <div className="col-sm-6 content">Max Price: {this.state.fortyEightHours.max}</div>
               )}
                 <div className="col-sm-6 content">Max Price: {this.state.ninetyDays.max}</div>
-              </div>
+              </div> */}
               {this.state.isSingleItem
               &&(
                 <div>
@@ -236,14 +258,20 @@ class ItemInfo extends React.Component {
                   &&(
                     <div className="col-sm-6 content"><strong>Ducats</strong></div>
                   )}
+                  {this.state.tradingTax > -1
+                  &&(
                     <div className="col-sm-6 content"><strong>Trading Tax</strong></div>
+                  )}
                   </div>
                   <div className="row">
                   {this.state.ducats > -1
                   &&(
                     <div className="col-sm-6 content">{this.state.ducats}</div>
                   )}
+                  {this.state.tradingTax > -1
+                  &&(
                     <div className="col-sm-6 content">{this.state.tradingTax}</div>
+                  )}
                   </div>
                   {this.state.relics.length > 0
                   &&(
