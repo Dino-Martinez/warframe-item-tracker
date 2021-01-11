@@ -28,6 +28,16 @@
   background: #f2618f;
   animation: loading 1s ease-in-out 0s infinite alternate;
 }
+.VictoryLineContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.VictoryContainer {
+  width: 500px!important;
+  height: 350px!important;
+}
 @keyframes loading {
   from {
     width: 0;

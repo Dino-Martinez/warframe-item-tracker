@@ -1,6 +1,7 @@
 import React from 'react';
 import './ItemInfo.css';
 import SearchBar from './SearchBar';
+import { VictoryArea, VictoryChart } from 'victory';
 
 class ItemInfo extends React.Component {
   constructor() {
@@ -27,7 +28,7 @@ class ItemInfo extends React.Component {
      * @param {dict} props
      * @return {bool}
      */
-    
+
     if (this.props.match.params.itemName !== newProps.match.params.itemName) {
       // fetch('/api/items/track/' + newProps.match.params.itemName)
       this.setState({waiting: true})
@@ -83,7 +84,7 @@ class ItemInfo extends React.Component {
       // Database Call
       const url = "/api/items/" + itemId;
       const itemResults = await fetch(url);
-      
+
 
       //if there is a bad search query, we display an error message
       let itemJson = await itemResults.json()
@@ -92,7 +93,7 @@ class ItemInfo extends React.Component {
         this.setState({successfulAPICall: false, waiting:false})
         return
       }
-      
+
       // this allows us to be more descriptive with which items have available stats from the API
       if (!itemId.endsWith("_set") && (!itemId.includes("lith_")) && (!itemId.includes("meso_")) && (!itemId.includes("neo_")) && (!itemId.includes("axi_"))) {
         isSingleItem = true;
@@ -173,9 +174,22 @@ class ItemInfo extends React.Component {
       );
     }
     else {
+      const chartData = [
+        {x: 0, y: 115},
+        {x: 1, y: 118},
+        {x: 2, y: 95},
+        {x: 3, y: 156},
+        {x: 4, y: 120},
+        {x: 5, y: 125},
+        {x: 6, y: 118},
+        {x: 7, y: 106.6},
+        {x: 8, y: 115},
+        {x: 9, y: 110},
+        {x: 10, y: 85},
+        {x: 11, y: 130},
+      ]
       return (
         <div>
-          <SearchBar />
           <div className ="item-img">
             <img src={this.state.imgUrl} alt="Item"></img>
           </div>
@@ -252,6 +266,27 @@ class ItemInfo extends React.Component {
               )}
             </div>
           )}
+          <div className="VictoryLineContainer">
+            <VictoryChart>
+              <VictoryArea
+                style={{
+                  data: {
+                    fill: "#c43a31", fillOpacity: 0.7, stroke: "#c43a31", strokeWidth: 3
+                  },
+                  labels: {
+                    fontSize: 15,
+                    fill: ({ datum }) => datum.x === 3 ? "#000000" : "#c43a31"
+                  }
+                }}
+                data={chartData}
+                labels={({ datum }) => {
+                  console.log(datum.x % 2 === 0 ? datum.y : "")
+                  return datum.x % 2 === 0 ? datum.y : "";
+                }}
+
+              />
+            </VictoryChart>
+          </div>
         </div>
       );
     }
