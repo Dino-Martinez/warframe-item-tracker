@@ -14,7 +14,7 @@ const getSuggestions = ((value) => {
 
   return inputLength === 0 ? [] : item_list.filter(item =>
     item.name.toLowerCase().slice(0, inputLength) === inputValue
-  ).slice(0, 10);
+  ).slice(0, 6);
 });
 
 const getSuggestionValue = ((suggestion) => suggestion.name)
@@ -23,7 +23,7 @@ const renderSuggestion = ((suggestion) => (
   /**
     * @param {string} suggestion
     */
-  <div>{suggestion.name}</div>
+  <div className="suggestion" >{suggestion.name}</div>
 ))
 
 
@@ -109,7 +109,7 @@ class SearchBar extends React.Component {
     }
     return(
       <div>
-        <div className="jumbotron form-group">
+        <div className="jumbotron autosuggest-container">
           <Autosuggest
             suggestions={suggestions}
             onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
@@ -117,7 +117,7 @@ class SearchBar extends React.Component {
             getSuggestionValue={getSuggestionValue}
             renderSuggestion={renderSuggestion}
             inputProps={inputProps}
-          />  
+          />
           <Link to={"/items/" + value} ><img src={icon} height="30" width="30" alt="Search Button"></img></Link>
         </div>
       </div>

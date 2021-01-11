@@ -1,0 +1,28 @@
+.react-autosuggest__input {
+  width: 600px;
+}
+.autosuggest-container {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+.suggestion {
+  padding: 8px;
+  text-decoration: none;
+  border: 1px solid #000;
+}
+ul{
+  list-style: none;
+  padding:0;
+  margin:0
+}
+.jumbotron li:nth-child(odd) {
+  background: #ddd;
+}
+.jumbotron li:hover {
+  background:#ccc;
+  cursor:pointer;
+}
