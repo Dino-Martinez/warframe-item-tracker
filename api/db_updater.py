@@ -3,35 +3,58 @@ import pymongo
 import os
 import requests
 import time
+import json as jsonn
 
 client = pymongo.MongoClient("localhost", 27017)
 db = client.itemDatabase
 
 # update all items, will only happen once. This only gets minimal data
 def update_items():
-    db.items.drop()
     result = requests.get('http://api.warframe.market/v1/items')
     json = result.json()
     payload = json["payload"]
     items = payload["items"]
 
     for api_item in items:
+      item = db.items.find_one({ "item_id" : api_item["url_name"] })
+      print(item)
+      if item is None:
+        newRequest = requests.get(f'http://api.warframe.market/v1/items/{api_item["url_name"]}')
+        json = newRequest.json()
+        payload = json["payload"]
+        set = payload["item"]["items_in_set"]
+        item_ids = []
+
+        for item in set:
+          item_ids.append(item["url_name"])
+          if ("en" in item) and (item["url_name"] == api_item["url_name"]):
+            # print(jsonn.dumps(item, indent=2))
+            ducats = item["ducats"] if ("ducats" in item) else -1
+            trading_tax = item["trading_tax"] if ("trading_tax" in item) else -1
+            relics = item["en"]["drop"] if ("drop" in item["en"]) else 0
+            mod_max_rank = item["mod_max_rank"] if ("mod_max_rank" in item) else 0
+
         db_item = {
             "item_id": api_item["url_name"],
             "name": api_item["item_name"],
             "img_url": f'https://api.warframe.market/static/assets/{api_item["thumb"]}',
-            "ducats": api_item["ducats"],
-            "trading_tax": api_item["trading_tax"],
+            "ducats": ducats,
+            "trading_tax": trading_tax,
             "is_urgent": False,
             "is_watched": False,
             "needs_stats": False,
-            "items_in_set": [],
-            "relics": api_item["en"]["drop"],
-            "max_mod_rank": api_item["mod_max_rank"],
+            "items_in_set": item_ids,
+            "relics": relics,
+            "max_mod_rank": mod_max_rank,
+            "avg_price": 0,
+            "min_price": 100000,
+            "max_price": -1,
             "order_history": [],
         }
+        print(jsonn.dumps(db_item, indent=2))
 
         db.items.insert_one(db_item)
+      print(len(list(db.items.find({}))))
 
 # update deeper statistics on watched items, this happens periodically
 def update_watchlist():
@@ -146,4 +169,4 @@ def update_watchlist():
         time.sleep(2)
 
 update_items()
-update_watchlist()
+# update_watchlist()
