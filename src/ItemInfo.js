@@ -5,6 +5,7 @@ import { VictoryArea, VictoryChart } from 'victory';
 import InfoList from './InfoList';
 
 class ItemInfo extends React.Component {
+  intervalID = 0;
   constructor() {
     super();
     this.state = {
@@ -29,6 +30,7 @@ class ItemInfo extends React.Component {
   componentWillReceiveProps(newProps) {
     if (this.props.match.params.itemName !== newProps.match.params.itemName) {
       this.setState({waiting: true})
+      clearInterval(this.intervalID)
     }
   }
 
@@ -50,6 +52,8 @@ class ItemInfo extends React.Component {
   componentDidMount() {
     const { match: { params: { itemName } } } = this.props;
     this.retrieveData(itemName);
+    this.intervalID = setInterval( () => {
+      this.retrieveData(itemName)}, 2000);    
   }
 
   /** If the component is being redirected to a new url, we untrack the current item so that stats will not be updated anymore
@@ -58,6 +62,7 @@ class ItemInfo extends React.Component {
     const { match: { params: { itemName } } } = this.props;
     const itemId = itemName.trim().toLowerCase().split(" ").join("_");
     fetch('/api/items/untrack/' + itemId)
+    clearInterval(this.intervalID)
   }
   /** This function retrieves data from our flask route that calls to our database held in api.py
     * @param {string} itemName
@@ -157,16 +162,12 @@ class ItemInfo extends React.Component {
     }
     else {
       const chartData = [];
-      console.log("history:");
-      console.log(this.state.item.order_history);
       this.state.item.order_history.forEach((order, index) => {
-        console.log(order);
-        console.log(index);
         chartData.push({x: index + 1, y: order.platinum});
       });
 
       // Build my info lists for display
-      const pricing = {
+      const pricingData = {
         title: "Prices:",
         data: [
           "Average Price: " + this.state.avgPrice,
@@ -175,23 +176,27 @@ class ItemInfo extends React.Component {
         ]
       };
 
-      const ducats = {
+      const ducatsData = {
         title: "Ducats:",
         data: [
           this.state.ducats,
         ]
       };
 
-      const tradingTax = {
+      const tradingTaxData = {
         title: "Trading Tax:",
         data: [
           this.state.tradingTax,
         ]
       };
-
-      const relics = {
+      
+      const relicNames = []
+      this.state.relics.forEach ( (relic) => {
+        relicNames.push(relic.name)
+      })
+      const relicsData = {
         title: "Aquisition:",
-        data: this.state.relics,
+        data: relicNames,
       };
 
       return (
@@ -206,26 +211,19 @@ class ItemInfo extends React.Component {
           </div>
           {this.state.successfulAPICall
             &&(
-            <div className="container">
-              <InfoList data={pricing} />
-              {this.state.isSingleItem
+            <div className="container data-container">
+              {this.state.ducats > -1
               &&(
-                <div>
-                  {this.state.ducats > -1
-                  &&(
-                    <InfoList data={ducats} />
-                  )}
-                  {this.state.tradingTax > -1
-                  &&(
-                    <InfoList data={tradingTax} />
-                  )}
-                  {this.state.relics.length > 0
-                  &&(
-                    <div>
-                      <InfoList data={relics} />
-                      </div>
-                    )}
-                </div>
+              <InfoList data={ducatsData} />
+              )}
+              <InfoList data={pricingData} />
+              {this.state.tradingTax > -1
+              &&(
+                <InfoList data={tradingTaxData} />
+              )}
+              {this.state.relics.length > 0
+              &&(
+                <InfoList data={relicsData} />
               )}
             </div>
           )}
@@ -245,10 +243,8 @@ class ItemInfo extends React.Component {
                     }}
                     data={chartData}
                     labels={({ datum }) => {
-                      console.log(datum.x % 2 === 0 ? datum.y : "")
                       return datum.x % 2 === 0 ? datum.y : "";
                     }}
-
                   />
                 </VictoryChart>
               </div>
