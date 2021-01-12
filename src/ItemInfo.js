@@ -11,8 +11,6 @@ class ItemInfo extends React.Component {
       waiting: true,
       isSingleItem: true,
       item: {},
-      ninetyDays: {},
-      fortyEightHours: {},
       tradingTax: 0,
       ducats: 0,
       relics: [],
@@ -96,8 +94,6 @@ class ItemInfo extends React.Component {
     if (!itemId.endsWith("_set") && (!itemId.includes("lith_")) && (!itemId.includes("meso_")) && (!itemId.includes("neo_")) && (!itemId.includes("axi_"))) {
       isSingleItem = true;
     }
-    const ninetyDays = itemJson["90day"];
-    const fortyEightHours = itemJson["48hr"];
 
     // helper functions
     const avgPrice = this.getAvgPrice(itemJson);
@@ -183,20 +179,15 @@ class ItemInfo extends React.Component {
       );
     }
     else {
-      const chartData = [
-        {x: 0, y: 115},
-        {x: 1, y: 118},
-        {x: 2, y: 95},
-        {x: 3, y: 156},
-        {x: 4, y: 120},
-        {x: 5, y: 125},
-        {x: 6, y: 118},
-        {x: 7, y: 106.6},
-        {x: 8, y: 115},
-        {x: 9, y: 110},
-        {x: 10, y: 85},
-        {x: 11, y: 130},
-      ]
+      const chartData = [];
+      console.log("history:");
+      console.log(this.state.item.order_history);
+      this.state.item.order_history.forEach((order, index) => {
+        console.log(order);
+        console.log(index);
+        chartData.push({x: index + 1, y: order.platinum});
+        return "";
+      })
       return (
         <div>
           <SearchBar />
@@ -222,34 +213,6 @@ class ItemInfo extends React.Component {
               <div className="row">
                 <div className="col-sm-6 content">Max Price: {this.state.maxPrice}</div>
               </div>
-              {/* <div className="row">
-              {this.state.fortyEightHours.min !== 10000000000
-              &&(
-                <div className="col-sm-6 content"><strong>Last 48 Hours</strong></div>
-              )}
-                <div className="col-sm-6 content"><strong>Last 90 Days</strong></div>
-              </div>
-              <div className="row">
-              {this.state.fortyEightHours.min !== 10000000000
-              &&(
-                <div className="col-sm-6 content">Average Price: {this.state.fortyEightHours.avg.toFixed(2)}</div>
-              )}
-                <div className="col-sm-6 content">Average Price: {this.state.ninetyDays.avg.toFixed(2)}</div>
-              </div>
-              <div className="row">
-              {this.state.fortyEightHours.min !== 10000000000
-              &&(
-                <div className="col-sm-6 content">Min Price: {this.state.fortyEightHours.min}</div>
-              )}
-                <div className="col-sm-6 content">Min Price: {this.state.ninetyDays.min}</div>
-              </div>
-              <div className="row">
-              {this.state.fortyEightHours.min !== 10000000000
-              &&(
-                <div className="col-sm-6 content">Max Price: {this.state.fortyEightHours.max}</div>
-              )}
-                <div className="col-sm-6 content">Max Price: {this.state.ninetyDays.max}</div>
-              </div> */}
               {this.state.isSingleItem
               &&(
                 <div>
@@ -294,27 +257,31 @@ class ItemInfo extends React.Component {
               )}
             </div>
           )}
-          <div className="VictoryLineContainer">
-            <VictoryChart>
-              <VictoryArea
-                style={{
-                  data: {
-                    fill: "#c43a31", fillOpacity: 0.7, stroke: "#c43a31", strokeWidth: 3
-                  },
-                  labels: {
-                    fontSize: 15,
-                    fill: ({ datum }) => datum.x === 3 ? "#000000" : "#c43a31"
-                  }
-                }}
-                data={chartData}
-                labels={({ datum }) => {
-                  console.log(datum.x % 2 === 0 ? datum.y : "")
-                  return datum.x % 2 === 0 ? datum.y : "";
-                }}
+          {chartData.length > 1
+            &&(
+              <div className="VictoryLineContainer">
+                <VictoryChart>
+                  <VictoryArea
+                    style={{
+                      data: {
+                        fill: "#c43a31", fillOpacity: 0.7, stroke: "#c43a31", strokeWidth: 3
+                      },
+                      labels: {
+                        fontSize: 15,
+                        fill: ({ datum }) => datum.x === 3 ? "#000000" : "#c43a31"
+                      }
+                    }}
+                    data={chartData}
+                    labels={({ datum }) => {
+                      console.log(datum.x % 2 === 0 ? datum.y : "")
+                      return datum.x % 2 === 0 ? datum.y : "";
+                    }}
 
-              />
-            </VictoryChart>
-          </div>
+                  />
+                </VictoryChart>
+              </div>
+            )
+          }
         </div>
       );
     }
