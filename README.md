@@ -25,7 +25,8 @@ a React App for spying on the price of items on the warframe market
 - Convert from api calls to receiving webhooks ✓
 - Add urgency check in backend for the watchlist ✓
 - Add notifications table on watch list for items that are urgent ✓
-- Complete fetch cycle with api calls every hour or so
+- Complete fetch cycle with api calls every hour or so ✓
+- Deploy to live server through heroku
 - Tackle extras
 - Clean up codebase
 - Convert backend to Express
