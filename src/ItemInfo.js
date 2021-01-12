@@ -173,7 +173,26 @@ class ItemInfo extends React.Component {
           "Min Price: " + this.state.minPrice,
           "Max Price: " + this.state.maxPrice,
         ]
-      }
+      };
+
+      const ducats = {
+        title: "Ducats:",
+        data: [
+          this.state.ducats,
+        ]
+      };
+
+      const tradingTax = {
+        title: "Trading Tax:",
+        data: [
+          this.state.tradingTax,
+        ]
+      };
+
+      const relics = {
+        title: "Aquisition:",
+        data: this.state.relics,
+      };
 
       return (
         <div>
@@ -192,41 +211,18 @@ class ItemInfo extends React.Component {
               {this.state.isSingleItem
               &&(
                 <div>
-                  <div className="row">
                   {this.state.ducats > -1
                   &&(
-                    <div className="col-sm-6 content"><strong>Ducats</strong></div>
+                    <InfoList data={ducats} />
                   )}
                   {this.state.tradingTax > -1
                   &&(
-                    <div className="col-sm-6 content"><strong>Trading Tax</strong></div>
+                    <InfoList data={tradingTax} />
                   )}
-                  </div>
-                  <div className="row">
-                  {this.state.ducats > -1
-                  &&(
-                    <div className="col-sm-6 content">{this.state.ducats}</div>
-                  )}
-                  {this.state.tradingTax > -1
-                  &&(
-                    <div className="col-sm-6 content">{this.state.tradingTax}</div>
-                  )}
-                  </div>
                   {this.state.relics.length > 0
                   &&(
                     <div>
-                      <div className="row">
-                        <div className="col-sm-6 content"><strong>Aquisition</strong></div>
-                      </div>
-                        {
-                          this.state.relics.map ( (relic) => {
-                            return (
-                              <div key={relic.name} className="row">
-                                <div className="col-sm-6 content">{relic.name}</div>
-                              </div>
-                            )
-                          })
-                        }
+                      <InfoList data={relics} />
                       </div>
                     )}
                 </div>
