@@ -8,7 +8,7 @@ class SearchPage extends React.Component {
   render() {
     return(
       <div>
-        <h1 className="jumbotron">Warframe Scraper</h1>
+        <h1 className="jumbotron">Warframe Tracker</h1>
         <SearchBar />
       </div>
     );

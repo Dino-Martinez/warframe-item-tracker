@@ -1,5 +1,5 @@
 # warframe-item-tracker
-Warframe Scraper is a tool for players to see advanced data from the [Warframe Market](https://warframe.market/)
+Warframe Tracker is a tool for players to see advanced data from the [Warframe Market](https://warframe.market/)
 
 a React App for spying on the price of items on the warframe market
 
