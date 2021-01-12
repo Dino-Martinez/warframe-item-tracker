@@ -10,6 +10,7 @@ db = client.itemDatabase
 async def storeResponse(message):
   new_order = {}
   responseJson = json.loads(message)
+  print(json.dumps(responseJson, indent=2))
   # Filter websocket data on sell orders only
   if (responseJson["type"] == "@WS/SUBSCRIPTIONS/MOST_RECENT/NEW_ORDER" and responseJson["payload"]["order"]["order_type"] == "sell"):
     item_id = responseJson["payload"]["order"]["item"]["url_name"]
@@ -18,7 +19,7 @@ async def storeResponse(message):
     if (len(order_history) > 50):
       order_history.pop()
     # filter mods, not riven or syndicate mods
-    if("mod" in responseJson["payload"]["order"]["item"]["tags"] and "riven" not in responseJson["payload"]["order"]["item"]["tags"] and "syndicate" not in responseJson["payload"]["order"]["item"]["tags"] and "parazon" not in responseJson["payload"]["order"]["item"]["tags"]):
+    if("mod_rank" in responseJson["payload"]["order"] and "max_mod_rank" in responseJson["payload"]["order"]["item"]):
       #filter out mods that are not at max rank
       if (responseJson["payload"]["order"]["mod_rank"] == responseJson["payload"]["order"]["item"]["mod_max_rank"]):
         new_order = {
