@@ -8,30 +8,30 @@ class WatchList extends React.Component {
     this.state = {
       items: [],
     };
-
     this.updateData = this.updateData.bind(this);
     this.removeItem = this.removeItem.bind(this);
-
   }
-
+  
+  /**
+   * this updates our data at our set interval
+   */
   componentDidMount() {
-    /**
-     * this updates our data at our set interval
-     * LIMIT: 3 requests/second
-     */
     this.updateData();
     this.intervalID = setInterval(this.updateData, 2000);
   }
 
+  /**
+   * this updates our data at our set interval
+   */
   componentWillUnmount() {
     clearInterval(this.intervalID);
   }
-  // Check periodically for api update, set state to new data
-  async updateData() {
-    /**
-    * retrieves json data from flask, and updates our state variable
-    * @return {dict}
+
+  /**
+    * Updates our state variable when called
     */
+  async updateData() {
+    
     const result = await fetch('/api/watchlist/list');
     const json = await result.json();
     this.setState({ items: json });
