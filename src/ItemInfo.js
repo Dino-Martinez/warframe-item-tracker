@@ -1,212 +1,255 @@
 import React from 'react';
 import './ItemInfo.css';
 import SearchBar from './SearchBar';
+import { VictoryArea, VictoryChart } from 'victory';
+import InfoList from './InfoList';
 
 class ItemInfo extends React.Component {
+  intervalID = 0;
   constructor() {
     super();
     this.state = {
       successfulAPICall: false,
+      waiting: true,
       isSingleItem: true,
       item: {},
-      ninetyDaysAverage: 0,
-      ninetyDaysMin: 0,
-      ninetyDaysMax: 0,
-      fortyEightHoursAverage: 0,
-      fortyEightHoursMin: 0,
-      fortyEightHoursMax: 0,
       tradingTax: 0,
       ducats: 0,
       relics: [],
       imgUrl: "",
+      itemName: "",
+      itemId: "",
     };
   }
 
-  componentDidUpdate(prevProps) {
-    // After the component updates (page load from "item info page"), we grab the search query and convert it to a format that our API can understand
-    if(prevProps.match.params.itemId !== this.props.match.params.itemId) {
-      const { match: { params: { itemId } } } = this.props;
-      const underscoredId = itemId.trim().toLowerCase().split(" ").join("_");
-      this.retrieveData(underscoredId);
+  /** This ensures our page does not reload if the current url is the same as the next url,
+    * and also makes sure that the loading animation displays if they are different
+    * @param {dict} props
+    * @return {bool}
+    */
+  componentWillReceiveProps(newProps) {
+    if (this.props.match.params.itemName !== newProps.match.params.itemName) {
+      this.setState({waiting: true})
+      clearInterval(this.intervalID)
     }
   }
 
-  componentDidMount() {
-    // After the component mounts (page load from HOME), we grab the search query and convert it to a format that our API can understand
-    const { match: { params: { itemId } } } = this.props;
-    const underscoredId = itemId.trim().toLowerCase().split(" ").join("_");
-    this.retrieveData(underscoredId);
+  /** After the component updates (page load from "item info page"), we grab the search query and convert it to a format that our API can understand
+    * @param {dict} props
+    */
+
+  componentDidUpdate(prevProps) {
+    if(prevProps.match.params.itemName !== this.props.match.params.itemName) {
+      const { match: { params: { itemName } } } = this.props;
+      const itemId = prevProps.match.params.itemName.trim().toLowerCase().split(" ").join("_");
+      fetch('/api/items/untrack/' + itemId)
+      this.retrieveData(itemName);
+    }
   }
 
-  async retrieveData(underscoreId) {
-    // This function handles our API call which will later handle our database call
+  /** After the component mounts (page load from HOME), we grab the search query and convert it to a format that our API can understand
+    */
+  componentDidMount() {
+    const { match: { params: { itemName } } } = this.props;
+    this.retrieveData(itemName);
+    this.intervalID = setInterval( () => {
+      this.retrieveData(itemName)}, 2000);    
+  }
+
+  /** If the component is being redirected to a new url, we untrack the current item so that stats will not be updated anymore
+    */
+  componentWillUnmount() {
+    const { match: { params: { itemName } } } = this.props;
+    const itemId = itemName.trim().toLowerCase().split(" ").join("_");
+    fetch('/api/items/untrack/' + itemId)
+    clearInterval(this.intervalID)
+  }
+  /** This function retrieves data from our flask route that calls to our database held in api.py
+    * @param {string} itemName
+    */
+  async retrieveData(itemName) {
+    const itemId = itemName.trim().toLowerCase().split(" ").join("_");
+
     let isSingleItem = false;
-    if (!underscoreId.endsWith("_set")) {
+    let successfulAPICall = true;
+
+    // Database Call
+    const url = "/api/items/" + itemId;
+    const itemResults = await fetch(url);
+
+
+    //if there is a bad search query, we display an error message
+    let itemJson = await itemResults.json()
+    itemJson = itemJson.shift()
+    if (itemJson === undefined) {
+      this.setState({successfulAPICall: false, waiting:false})
+      return
+    }
+
+    // this allows us to be more descriptive with which items have available stats from the API
+    if (!itemId.endsWith("_set") && (!itemId.includes("lith_")) && (!itemId.includes("meso_")) && (!itemId.includes("neo_")) && (!itemId.includes("axi_"))) {
       isSingleItem = true;
     }
-    console.log(isSingleItem)
-    let successfulAPICall = false; 
-    const url = "https://api.warframe.market/v1/items/" + underscoreId;
-    const statistics = "/statistics";
-    const itemResults = await fetch(url);
-    const itemJson = await itemResults.json();
-    if(itemResults.status === 200) {
-      successfulAPICall = true;
-    }
-    else {
-      this.setState({successfulAPICall: false});
-      return;
-    }
-    const statisticsResult = await fetch(url + statistics);
-    const statisticsJson = await statisticsResult.json();
-    const ninetyDays = statisticsJson.payload.statistics_closed["90days"];
-    const fortyEightHours = statisticsJson.payload.statistics_closed["48hours"];
-    this.getNinetyDaysData(ninetyDays);
-    this.getFortyEightHoursData(fortyEightHours);
+
+    // helper functions
+    const avgPrice = this.getAvgPrice(itemJson);
+    const minPrice = this.getMinPrice(itemJson);
+    const maxPrice = this.getMaxPrice(itemJson);
+    const imgUrl = this.getImage(itemJson);
+    const relics = this.getRelics(itemJson);
     const tradingTax = this.getTradingTax(itemJson);
     const ducats = this.getDucats(itemJson);
-    const relics = this.getRelics(itemJson, underscoreId);
-    const imgCall = "https://api.warframe.market/static/assets/"
-    let imgUrl = this.getImage(itemJson, underscoreId);
-    imgUrl = imgCall + imgUrl;    
-    this.setState({item : statisticsJson.payload.statistics_closed, ninetyDays, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem});
-  }
-  getImage(itemJson, underscoreId) {
-    let imageUrl = ""
-    itemJson.payload.item.items_in_set.forEach( (item) => {
-      if (underscoreId === item.url_name) {
-        imageUrl = item.thumb;
-      }
-    })
-    return imageUrl
-  }
-  getRelics(itemJson, underscoreId) {
-    let relicsList = []
-    itemJson.payload.item.items_in_set.forEach( (item) => {
-      if (underscoreId === item.url_name) {
-        return item.en.drop.forEach( (drop) => {
-          relicsList.push(drop.name)
-        })
-      }
-    })
-    return relicsList
-  }
-  getTradingTax(itemJson) {
-    let totalTradingTax = 0
-    for(let x=0 ; x<4; x++) {
-      totalTradingTax += itemJson.payload.item.items_in_set[x].trading_tax
-    }
-    return totalTradingTax;
-  }
-  getDucats(itemJson) {
-    let totalDucats = 0
-    for(let x=0; x<4; x++) {
-      totalDucats += itemJson.payload.item.items_in_set[x].ducats
-    }
-    return totalDucats
+    itemName = this.getItemName(itemJson);
+    this.setState({item : itemJson, waiting: false, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName, itemId, avgPrice, minPrice, maxPrice});
+
   }
 
-  getNinetyDaysData(ninetyDays) {
-    let counter = 0;
-    let total = 0;
-    let ninetyDaysMin = 10000;
-    let ninetyDaysMax = 0;
-    ninetyDays.map((day) => {
-      counter ++;
-      total += day.avg_price;
-      if (day.min_price < ninetyDaysMin) {
-        ninetyDaysMin = day.min_price;
-      }
-      if (day.max_price > ninetyDaysMax) {
-        ninetyDaysMax = day.max_price;
-      }
-        return null;
-    })
-    let ninetyDaysAverage = total/counter;
-    this.setState ({ninetyDaysAverage, ninetyDaysMin, ninetyDaysMax})
+  getAvgPrice(itemJson) {
+    return itemJson.avg_price
   }
-  getFortyEightHoursData(fortyEightHours) {
-    let counter = 0;
-    let total = 0;
-    let fortyEightHoursMin = 10000;
-    let fortyEightHoursMax = 0;
-    fortyEightHours.map((day) => {
-      counter ++;
-      total += day.avg_price;
-      if (day.min_price < fortyEightHoursMin) {
-        fortyEightHoursMin = day.min_price;
-      }
-      if (day.max_price > fortyEightHoursMax) {
-        fortyEightHoursMax = day.max_price;
-      }
-        return null;
-    })
-    let fortyEightHoursAverage = total/counter;
-    this.setState ({fortyEightHoursAverage, fortyEightHoursMin, fortyEightHoursMax})
+
+  getMinPrice(itemJson) {
+    return itemJson.min_price
+  }
+
+  getMaxPrice(itemJson) {
+    return itemJson.max_price
+  }
+
+  getItemName(itemJson) {
+    return itemJson.name
+  }
+
+  getImage(itemJson) {
+    return itemJson.img_url
+  }
+
+  getRelics(itemJson) {
+    return itemJson.relics;
+  }
+
+  getTradingTax(itemJson) {
+    return itemJson.trading_tax;
+  }
+
+  getDucats(itemJson) {
+    return itemJson.ducats
+  }
+
+  /** Awaits our backend call to add an item to the watchlist
+    * @param {string} itemId
+    */
+  async addItem(itemId) {
+    await fetch('/api/watchlist/add/' + itemId)
   }
 
   render() {
-    if (this.state.successfulAPICall !== true) {
+    if (this.state.waiting === true) {
       return (
-        <div>
-          <p>This API Call sucks</p>
+        <div className="container h1 text-center mt-5">
+          <h3 className="text-info loading">Loading...</h3>
+          <div id="loading-bar"><div id="progress"></div></div>
+        </div>
+      )
+    }
+    if (this.state.successfulAPICall === false) {
+      return (
+        <div className="container text-center mt-5">
+          <p className="h1 text-danger">We could not find the item you requested.</p>
           <SearchBar />
         </div>
       );
     }
     else {
+      const chartData = [];
+      this.state.item.order_history.forEach((order, index) => {
+        chartData.push({x: index + 1, y: order.platinum});
+      });
+
+      // Build my info lists for display
+      const pricingData = {
+        title: "Prices:",
+        data: [
+          "Average Price: " + this.state.avgPrice,
+          "Min Price: " + this.state.minPrice,
+          "Max Price: " + this.state.maxPrice,
+        ]
+      };
+
+      const ducatsData = {
+        title: "Ducats:",
+        data: [
+          this.state.ducats,
+        ]
+      };
+
+      const tradingTaxData = {
+        title: "Trading Tax:",
+        data: [
+          this.state.tradingTax,
+        ]
+      };
+      
+      const relicNames = []
+      this.state.relics.forEach ( (relic) => {
+        relicNames.push(relic.name)
+      })
+      const relicsData = {
+        title: "Aquisition:",
+        data: relicNames,
+      };
+
       return (
         <div>
           <SearchBar />
           <div className ="item-img">
             <img src={this.state.imgUrl} alt="Item"></img>
           </div>
+          <div className="btn-name">
+            <h3>{this.state.itemName}</h3>
+            <button className="btn btn-info" onClick={() => this.addItem(this.state.itemId)}>Add Item to Watch List</button>
+          </div>
           {this.state.successfulAPICall
             &&(
-            <div className="container">
-              <div className="row">
-                <div className="col-sm-6 content"><strong>Last 48 Hours</strong></div>
-                <div className="col-sm-6 content"><strong>Last 90 Days</strong></div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6 content">Average Price: {this.state.fortyEightHoursAverage.toFixed(2)}</div>
-                <div className="col-sm-6 content">Average Price: {this.state.ninetyDaysAverage.toFixed(2)}</div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6 content">Min Price: {this.state.fortyEightHoursMin}</div>
-                <div className="col-sm-6 content">Min Price: {this.state.ninetyDaysMin}</div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6 content">Max Price: {this.state.fortyEightHoursMax}</div>
-                <div className="col-sm-6 content">Max Price: {this.state.ninetyDaysMax}</div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6 content"><strong>Ducats</strong></div>
-                <div className="col-sm-6 content"><strong>Trading Tax</strong></div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6 content">{this.state.ducats}</div>
-                <div className="col-sm-6 content">{this.state.tradingTax}</div>
-              </div>
-              {this.state.isSingleItem
+            <div className="container data-container">
+              {this.state.ducats > -1
               &&(
-                <div>
-                  <div className="row">
-                    <div className="col-sm-6 content"><strong>Aquisition</strong></div>
-                  </div>
-                    {
-                      this.state.relics.map ( (relic) => {
-                        return (
-                          <div key={relic} className="row">
-                            <div className="col-sm-6 content">{relic}</div>
-                          </div>
-                        )
-                      })
-                    }
-                </div>
+              <InfoList data={ducatsData} />
+              )}
+              <InfoList data={pricingData} />
+              {this.state.tradingTax > -1
+              &&(
+                <InfoList data={tradingTaxData} />
+              )}
+              {this.state.relics.length > 0
+              &&(
+                <InfoList data={relicsData} />
               )}
             </div>
           )}
+          {chartData.length > 1
+            &&(
+              <div className="VictoryLineContainer">
+                <VictoryChart>
+                  <VictoryArea
+                    style={{
+                      data: {
+                        fill: "#c43a31", fillOpacity: 0.7, stroke: "#c43a31", strokeWidth: 3
+                      },
+                      labels: {
+                        fontSize: 15,
+                        fill: ({ datum }) => datum.x === 3 ? "#000000" : "#c43a31"
+                      }
+                    }}
+                    data={chartData}
+                    labels={({ datum }) => {
+                      return datum.x % 2 === 0 ? datum.y : "";
+                    }}
+                  />
+                </VictoryChart>
+              </div>
+            )
+          }
         </div>
       );
     }

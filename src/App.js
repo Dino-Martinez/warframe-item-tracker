@@ -14,7 +14,7 @@ function App() {
       <Header />
       <Route exact path="/" component={SearchPage} />
       <Route path="/watchlist" component={WatchList}/>
-      <Route path="/items/:itemId" component={ItemInfo}/>
+      <Route path="/items/:itemName" component={ItemInfo}/>
       <Footer />
     </Router>
   );

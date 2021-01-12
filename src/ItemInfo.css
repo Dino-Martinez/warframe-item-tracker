@@ -12,3 +12,44 @@
 .row *{
   margin: 10px 0px;
 }
+.btn-name {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+#loading-bar {
+  height: 24px;
+  width: 100%;
+  background: #333;
+}
+#loading-bar > #progress{
+  height:24px;
+  width: 0;
+  background: #f2618f;
+  animation: loading 1s ease-in-out 0s infinite alternate;
+}
+.VictoryLineContainer {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+.VictoryContainer {
+  width: 500px!important;
+  height: 350px!important;
+}
+@keyframes loading {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+.data-container {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-row-gap: 50px;
+  justify-items: center;
+  text-align: center;
+}
