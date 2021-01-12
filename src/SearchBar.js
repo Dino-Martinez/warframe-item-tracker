@@ -37,6 +37,7 @@ class SearchBar extends React.Component {
     };
 
     this.onChange = (event, {newValue}) => {
+      newValue = newValue.replace("&","and")
       this.setState({ value: newValue });
     }
     this.updateQuery = this.updateQuery.bind(this);
