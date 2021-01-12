@@ -17,16 +17,20 @@ const getSuggestions = ((value) => {
   ).slice(0, 6);
 });
 
+/** This function returns the value that should be displayed by a suggestion
+  * @param {string} suggestion
+  */
 const getSuggestionValue = ((suggestion) => suggestion.name)
 
+/** This function renders a single suggestion in our autosuggest
+  * @param {string} suggestion
+  */
 const renderSuggestion = ((suggestion) => (
-  /**
-    * @param {string} suggestion
-    */
   <div className="suggestion" >{suggestion.name}</div>
 ))
 
-
+/** This class will represent our Search Bar, with autosuggest functionality
+  */
 class SearchBar extends React.Component {
   constructor() {
     super();
@@ -48,53 +52,49 @@ class SearchBar extends React.Component {
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeyDown);
   }
+
   componentDidUpdate(prevProps, prevState) {
-    /**
-    * @param {dict, dict} props
-    */
     if(prevState.enterPressed !== this.state.enterPressed) {
       this.setState({ enterPressed: false })
     }
   }
+
   async retrieveAllItems() {
     const result = await fetch('/api/items');
     const json = await result.json();
     item_list = json
   }
 
+  /** This handler submits our query when the enter key is pressed
+    * @param {KeyPressedEvent} event
+    */
   handleKeyDown(event) {
-    /**
-     * @param {event} event
-     */
     const code = (event.keyCode ? event.keyCode : event.which);
     if (code === 13) {
       this.setState({ enterPressed: true });
     }
   }
-
+  /** This function updates our query based on current input
+    * @param {event} event
+    */
   updateQuery(event, {newValue}) {
-    /**
-     * @param {event} event
-     */
     this.setState({ query: newValue });
   }
 
-  onSuggestionsFetchRequested = (({value}) => {
-    /**
-     * @param {string} value
-     */
+  /** This function updates our state with the list of suggestions based on current input
+    * @param {string} value
+    */
+  onSuggestionsFetchRequested(value){
     this.setState({ suggestions : getSuggestions(value) })
-  })
+  }
 
-  onSuggestionsClearRequested = (() =>{
-    /**
-     * This function clears the suggestions when we click out of the search bar
-     */
+  /** This function clears the suggestions when we click out of the search bar
+    */
+  onSuggestionsClearRequested() {
     this.setState({ suggestions : [] })
-  })
+  }
 
   render() {
-    /*This will give me something to avoid dom warnings*/
     const url = window.location.href;
     const newQuery = url.substring(30);
     const { value, enterPressed, suggestions } = this.state;
