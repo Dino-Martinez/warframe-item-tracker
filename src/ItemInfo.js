@@ -20,25 +20,22 @@ class ItemInfo extends React.Component {
     };
   }
 
+  /** This ensures our page does not reload if the current url is the same as the next url,
+    * and also makes sure that the loading animation displays if they are different
+    * @param {dict} props
+    * @return {bool}
+    */
   componentWillReceiveProps(newProps) {
-    /**
-     * this ensures our page does not reload if the current url is the same as the next url
-     * @param {dict} props
-     * @return {bool}
-     */
-
     if (this.props.match.params.itemName !== newProps.match.params.itemName) {
-      // fetch('/api/items/track/' + newProps.match.params.itemName)
       this.setState({waiting: true})
     }
   }
 
+  /** After the component updates (page load from "item info page"), we grab the search query and convert it to a format that our API can understand
+    * @param {dict} props
+    */
+
   componentDidUpdate(prevProps) {
-    /**
-     * After the component updates (page load from "item info page"), we grab the search query and convert it to a format that our API can understand
-     * @param {dict} props
-     * @return {bool}
-     */
     if(prevProps.match.params.itemName !== this.props.match.params.itemName) {
       const { match: { params: { itemName } } } = this.props;
       const itemId = prevProps.match.params.itemName.trim().toLowerCase().split(" ").join("_");
@@ -47,31 +44,24 @@ class ItemInfo extends React.Component {
     }
   }
 
+  /** After the component mounts (page load from HOME), we grab the search query and convert it to a format that our API can understand
+    */
   componentDidMount() {
-    /**
-     * After the component mounts (page load from HOME), we grab the search query and convert it to a format that our API can understand
-     * @return {dict}
-     */
     const { match: { params: { itemName } } } = this.props;
     this.retrieveData(itemName);
   }
 
+  /** If the component is being redirected to a new url, we untrack the current item so that stats will not be updated anymore
+    */
   componentWillUnmount() {
-    /**
-     * If the component is being redirected to a new url, we untrack the current item so that stats will not be updated anymore
-     * @return {dict}
-     */
     const { match: { params: { itemName } } } = this.props;
     const itemId = itemName.trim().toLowerCase().split(" ").join("_");
     fetch('/api/items/untrack/' + itemId)
   }
-
+  /** This function retrieves data from our flask route that calls to our database held in api.py
+    * @param {string} itemName
+    */
   async retrieveData(itemName) {
-    /**
-     * This function retrieves data from our flask route that calls to our database held in api.py
-     * @param {string} itemName
-     * @return {dict}
-     */
     const itemId = itemName.trim().toLowerCase().split(" ").join("_");
 
     let isSingleItem = false;
@@ -111,54 +101,40 @@ class ItemInfo extends React.Component {
   getAvgPrice(itemJson) {
     return itemJson.avg_price
   }
+
   getMinPrice(itemJson) {
     return itemJson.min_price
   }
+
   getMaxPrice(itemJson) {
     return itemJson.max_price
   }
+
   getItemName(itemJson) {
-     /**
-     * @param {dict} json
-     * @return {string}
-     */
     return itemJson.name
   }
+
   getImage(itemJson) {
-     /**
-     * @param {dict} json
-     * @return {string}
-     */
     return itemJson.img_url
   }
+
   getRelics(itemJson) {
-     /**
-     * @param {dict} json
-     * @return {array}
-     */
     return itemJson.relics;
   }
+
   getTradingTax(itemJson) {
-    /**
-     * @param {dict} json
-     * @return {int}
-     */
     return itemJson.trading_tax;
   }
+
   getDucats(itemJson) {
-    /**
-     * @param {dict} json
-     * @return {int}
-     */
     return itemJson.ducats
   }
+
+  /** Awaits our backend call to add an item to the watchlist
+    * @param {string} itemId
+    */
   async addItem(itemId) {
-    /**
-     * this function sends an itemId to the flask route to add an item to the watch list
-     * @param {dict} json
-     */
     await fetch('/api/watchlist/add/' + itemId)
-    return
   }
 
   render() {
