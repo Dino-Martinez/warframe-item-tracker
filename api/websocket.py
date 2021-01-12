@@ -52,7 +52,7 @@ async def storeResponse(message):
       num_items += 1
     avg_price = total_platinum / num_items
 
-    is_urgent = min_price < avg_price
+    is_urgent = round((min_price < avg_price), 2)
 
     db.items.update_one({'item_id': item_id}, {"$set": {"order_history": order_history, "avg_price": avg_price, "min_price": min_price, "max_price": max_price, "is_urgent": is_urgent}})
 
