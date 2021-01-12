@@ -176,8 +176,8 @@ class ItemInfo extends React.Component {
     }
     if (this.state.successfulAPICall === false) {
       return (
-        <div className="container h1 text-center mt-5">
-          <p className="text-danger">We could not find the item you requested.</p>
+        <div className="container text-center mt-5">
+          <p className="h1 text-danger">We could not find the item you requested.</p>
           <SearchBar />
         </div>
       );
