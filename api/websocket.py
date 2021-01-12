@@ -9,7 +9,7 @@ db = client.itemDatabase
 
 async def storeResponse(message):
   new_order = {}
-  responseJson = json.loads(message)  
+  responseJson = json.loads(message)
   # Here I filter my websocket data to only show me new sell orders
   if (responseJson["type"] == "@WS/SUBSCRIPTIONS/MOST_RECENT/NEW_ORDER" and responseJson["payload"]["order"]["order_type"] == "sell"):
     print(json.dumps(responseJson, indent=2))
@@ -27,7 +27,7 @@ async def storeResponse(message):
         new_order = {
         "platinum" : responseJson["payload"]["order"]["platinum"],
       }
-      else: 
+      else:
         return
     # everything else
     else:
@@ -41,7 +41,7 @@ async def storeResponse(message):
       min_price = responseJson["payload"]["order"]["platinum"]
     if responseJson["payload"]["order"]["platinum"] > max_price:
       max_price = responseJson["payload"]["order"]["platinum"]
-    
+
     #Calulate avg price
     order_history.append(new_order)
     print(order_history, "ORDER HISTORY---------------------")
@@ -51,11 +51,13 @@ async def storeResponse(message):
       total_platinum += item["platinum"]
       num_items += 1
     avg_price = total_platinum / num_items
-    
-    db.items.update_one({'item_id': item_id}, {"$set": {"order_history": order_history, "avg_price": avg_price, "min_price": min_price, "max_price": max_price}})
+
+    is_urgent = min_price < avg_price
+
+    db.items.update_one({'item_id': item_id}, {"$set": {"order_history": order_history, "avg_price": avg_price, "min_price": min_price, "max_price": max_price, "is_urgent": is_urgent}})
 
 
-  
+
   print(json.dumps(message, indent = 2))
   return "hello"
 
