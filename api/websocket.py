@@ -52,7 +52,7 @@ async def storeResponse(message):
   return {"success" : True}
 
 async def socket():
-  '''Websocket that connects to the Warframe Market Websocket'''
+    '''Websocket that connects to the Warframe Market Websocket'''
     async with websockets.connect(
             'wss://warframe.market/socket',
             timeout=30,
