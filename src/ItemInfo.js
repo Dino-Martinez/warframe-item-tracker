@@ -2,6 +2,7 @@ import React from 'react';
 import './ItemInfo.css';
 import SearchBar from './SearchBar';
 import { VictoryArea, VictoryChart } from 'victory';
+import InfoList from './InfoList';
 
 class ItemInfo extends React.Component {
   constructor() {
@@ -162,8 +163,18 @@ class ItemInfo extends React.Component {
         console.log(order);
         console.log(index);
         chartData.push({x: index + 1, y: order.platinum});
-        return "";
-      })
+      });
+
+      // Build my info lists for display
+      const pricing = {
+        title: "Prices:",
+        data: [
+          "Average Price: " + this.state.avgPrice,
+          "Min Price: " + this.state.minPrice,
+          "Max Price: " + this.state.maxPrice,
+        ]
+      }
+
       return (
         <div>
           <SearchBar />
@@ -177,18 +188,7 @@ class ItemInfo extends React.Component {
           {this.state.successfulAPICall
             &&(
             <div className="container">
-              <div className="row">
-                <div className="col-sm-6 content"><strong>Prices</strong></div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6 content">Average Price: {this.state.avgPrice}</div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6 content">Min Price: {this.state.minPrice}</div>
-              </div>
-              <div className="row">
-                <div className="col-sm-6 content">Max Price: {this.state.maxPrice}</div>
-              </div>
+              <InfoList data={pricing} />
               {this.state.isSingleItem
               &&(
                 <div>
