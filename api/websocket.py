@@ -20,8 +20,8 @@ async def storeResponse(message):
     # only store 50 most recent orders
     if (len(order_history) > 50):
       order_history.pop()
-    # filter mods only, NOT RIVENS
-    if("mod" in responseJson["payload"]["order"]["item"]["tags"] and "riven" not in responseJson["payload"]["order"]["item"]["tags"]):
+    # filter mods only, NOT RIVENS OR SYNDICATE ITEMS
+    if("mod" in responseJson["payload"]["order"]["item"]["tags"] and "riven" not in responseJson["payload"]["order"]["item"]["tags"] and "syndicate" not in responseJson["payload"]["order"]["item"]["tags"]):
       #filter bad mods out
       if (responseJson["payload"]["order"]["mod_rank"] == responseJson["payload"]["order"]["item"]["mod_max_rank"]):
         new_order = {
