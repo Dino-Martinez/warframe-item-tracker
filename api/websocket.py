@@ -56,7 +56,7 @@ async def socket():
     '''Websocket that connects to the Warframe Market Websocket'''
     async with websockets.connect(
             'wss://warframe.market/socket',
-            timeout=30,
+            timeout=10000000000000,
             extra_headers={
                 'Authorization': 'JWT=5ed9af08fa08dc07b3d63ad0'
             }) as websocket:
