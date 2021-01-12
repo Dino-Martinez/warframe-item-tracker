@@ -58,6 +58,7 @@ def initialize_items():
 
 def update_database():
   '''Every hour we update the avg, min, max price on all items'''
+
   items = list(db.items.find({}))
   for item in items:
     item_id = item["item_id"]
@@ -81,6 +82,8 @@ def update_database():
       "max_price": most_recent["max_price"],
     }
     db.items.update_one({"item_id": item_id}, {"$set" : db_item})
-
-update_database()
+    
+while True:
+  time.sleep(3600)
+  update_database()
 # initialize_items()
