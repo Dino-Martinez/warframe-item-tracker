@@ -77,20 +77,20 @@ class SearchBar extends React.Component {
   /** This function updates our query based on current input
     * @param {event} event
     */
-  updateQuery(event, {newValue}) {
+  updateQuery = (event, {newValue}) => {
     this.setState({ query: newValue });
   }
 
   /** This function updates our state with the list of suggestions based on current input
     * @param {string} value
     */
-  onSuggestionsFetchRequested(value){
+  onSuggestionsFetchRequested = ({value}) => {
     this.setState({ suggestions : getSuggestions(value) })
   }
 
   /** This function clears the suggestions when we click out of the search bar
     */
-  onSuggestionsClearRequested() {
+  onSuggestionsClearRequested = () => {
     this.setState({ suggestions : [] })
   }
 
