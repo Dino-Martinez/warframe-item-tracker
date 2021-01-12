@@ -43,7 +43,7 @@ class WatchList extends React.Component {
   render() {
     return (
       <div className="container text-center mt-5">
-        
+
         <h2>Important Items:</h2>
         <table className="table table-bordered table-striped">
           <thead className="thead-dark">
@@ -58,8 +58,8 @@ class WatchList extends React.Component {
           <tbody>
           {
             this.state.items.map((item) => {
-              const styles = item.isUrgent ? "text-danger urgent" : "";
-              if (item.isUrgent) {
+              const styles = item.is_urgent ? "text-danger urgent" : "";
+              if (item.is_urgent) {
                 return (
                   <tr key={item.item_id}>
                     <td className={styles}>{item.name}</td>
