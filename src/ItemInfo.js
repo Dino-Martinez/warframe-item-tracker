@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './ItemInfo.css';
 import SearchBar from './SearchBar';
 import { VictoryArea, VictoryChart } from 'victory';
@@ -13,6 +14,7 @@ class ItemInfo extends React.Component {
       waiting: true,
       isSingleItem: true,
       item: {},
+      itemsInSet: [],
       tradingTax: 0,
       ducats: 0,
       relics: [],
@@ -53,7 +55,7 @@ class ItemInfo extends React.Component {
     const { match: { params: { itemName } } } = this.props;
     this.retrieveData(itemName);
     this.intervalID = setInterval( () => {
-      this.retrieveData(itemName)}, 2000);    
+      this.retrieveData(itemName)}, 2000);
   }
 
   /** If the component is being redirected to a new url, we untrack the current item so that stats will not be updated anymore
@@ -100,7 +102,17 @@ class ItemInfo extends React.Component {
     const tradingTax = this.getTradingTax(itemJson);
     const ducats = this.getDucats(itemJson);
     itemName = this.getItemName(itemJson);
-    this.setState({item : itemJson, waiting: false, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName, itemId, avgPrice, minPrice, maxPrice});
+
+    // Add items in set data
+    const itemsInSet = await Promise.all(itemJson.items_in_set.map(async (itemId) => {
+      const url = "/api/items/" + itemId;
+      const result = await fetch(url);
+      const json = await result.json();
+      const item = json.shift();
+      return {url: item.item_id, img: item.img_url};
+    }));
+
+    this.setState({item : itemJson, waiting: false, itemsInSet, successfulAPICall, tradingTax, ducats, relics, imgUrl, isSingleItem, itemName, itemId, avgPrice, minPrice, maxPrice});
 
   }
 
@@ -189,7 +201,7 @@ class ItemInfo extends React.Component {
           this.state.tradingTax,
         ]
       };
-      
+
       const relicNames = []
       this.state.relics.forEach ( (relic) => {
         relicNames.push(relic.name)
@@ -200,15 +212,20 @@ class ItemInfo extends React.Component {
       };
 
       return (
-        <div>
+        <div className="ItemInfoContainer">
           <SearchBar />
-          <div className ="item-img">
-            <img src={this.state.imgUrl} alt="Item"></img>
+          <h2 className="ItemName">{this.state.itemName}</h2>
+          <img className="ItemImage" src={this.state.imgUrl} alt="Item"></img>
+          <div className="ItemsInSet row w-50 justify-content-around">
+            {
+              this.state.itemsInSet.map((item) => {
+                return (
+                  <Link className="SetItemLink" to={'/items/' + item.url}><img width="64" height="64" src={item.img} /></Link>
+                )
+              })
+            }
           </div>
-          <div className="btn-name">
-            <h3>{this.state.itemName}</h3>
-            <button className="btn btn-info" onClick={() => this.addItem(this.state.itemId)}>Add Item to Watch List</button>
-          </div>
+          <button className="btn btn-info" onClick={() => this.addItem(this.state.itemId)}>Add Item to Watch List</button>
           {this.state.successfulAPICall
             &&(
             <div className="container data-container">

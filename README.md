@@ -24,7 +24,7 @@ As of right now, our project is not deployed to any live domain. In order to see
 
 ## Extras:
 - Graph historical prices on item page ✓
-- Link item pages via their sets
+- Link item pages via their sets ✓
 - Paginate watchlist
 
 ## TODO:
