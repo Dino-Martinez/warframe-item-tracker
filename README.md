@@ -25,7 +25,7 @@ As of right now, our project is not deployed to any live domain. In order to see
 ## Extras:
 - Graph historical prices on item page ✓
 - Link item pages via their sets ✓
-- Paginate watchlist
+- Paginate watchlist ✓
 
 ## TODO:
 - Finish building db periodically from api call ✓
@@ -37,6 +37,6 @@ As of right now, our project is not deployed to any live domain. In order to see
 - Add notifications table on watch list for items that are urgent ✓
 - Complete fetch cycle with api calls every hour or so ✓
 - Deploy to live server through heroku
-- Tackle extras
+- Tackle extras ✓
 - Clean up codebase
 - Convert backend to Express
