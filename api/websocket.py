@@ -23,8 +23,8 @@ async def storeResponse(message):
       #filter out mods that are not at max rank
       if (responseJson["payload"]["order"]["mod_rank"] == responseJson["payload"]["order"]["item"]["mod_max_rank"]):
         new_order = {
-        "platinum" : responseJson["payload"]["order"]["platinum"],
-      }
+          "platinum" : responseJson["payload"]["order"]["platinum"],
+        }
       else:
         return {"success": False}
     # everything else
@@ -47,7 +47,7 @@ async def storeResponse(message):
       total_platinum += item["platinum"]
       num_items += 1
     avg_price = round(total_platinum / num_items, 2)
-    is_urgent = min_price < avg_price
+    is_urgent = new_order["platinum"] < avg_price
 
     db.items.update_one({'item_id': item_id}, {"$set": {"order_history": order_history, "avg_price": avg_price, "min_price": min_price, "max_price": max_price, "is_urgent": is_urgent}})
   return {"success" : True}

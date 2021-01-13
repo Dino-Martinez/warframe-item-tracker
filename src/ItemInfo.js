@@ -220,7 +220,7 @@ class ItemInfo extends React.Component {
             {
               this.state.itemsInSet.map((item) => {
                 return (
-                  <Link className="SetItemLink" to={'/items/' + item.url}><img width="64" height="64" src={item.img} /></Link>
+                  <Link className="SetItemLink" to={'/items/' + item.url}><img width="64" height="64" src={item.img} alt="Item in set" /></Link>
                 )
               })
             }
