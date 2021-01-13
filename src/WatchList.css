@@ -1,5 +1,11 @@
-.table .thead-dark th{
+.dataTables_wrapper {
+  margin-bottom: 128px;
+}
+.table thead{
   background: var(--gray-dark)!important;
+}
+.table thead:nth-child(3) {
+  display:none;
 }
 .urgent {
   font-weight: bolder;
@@ -15,4 +21,28 @@ tr p {
 }
 tr p:hover {
   cursor: pointer;
+}
+.form-control {
+  width:auto!important;
+}
+.Pagination {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 128px;
+}
+.Pagination li a{
+  font-size: 1.3em;
+  border: 1px solid #000;
+  border-radius: 5px;
+  min-width: 30px;
+  padding: 4px 12px;
+  margin: 4px;
+  text-decoration: none;
+  transition: all .2s ease-out;
+}
+.Pagination li a:hover {
+  cursor: pointer;
+  color: #fff;
+  background: #343a40;
 }
