@@ -1,6 +1,9 @@
 .react-autosuggest__input {
   width: 600px;
 }
+.react-autosuggest__suggestion--highlighted {
+  background:#ccc!important;
+}
 .autosuggest-container {
   display: flex;
   flex-direction: row;
