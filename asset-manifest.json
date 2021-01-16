@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/warframe-item-tracker/static/css/main.2547f7d5.chunk.css",
+    "main.js": "/warframe-item-tracker/static/js/main.edc8f0c1.chunk.js",
+    "main.js.map": "/warframe-item-tracker/static/js/main.edc8f0c1.chunk.js.map",
+    "runtime-main.js": "/warframe-item-tracker/static/js/runtime-main.125b66b3.js",
+    "runtime-main.js.map": "/warframe-item-tracker/static/js/runtime-main.125b66b3.js.map",
+    "static/js/2.d5ecd79b.chunk.js": "/warframe-item-tracker/static/js/2.d5ecd79b.chunk.js",
+    "static/js/2.d5ecd79b.chunk.js.map": "/warframe-item-tracker/static/js/2.d5ecd79b.chunk.js.map",
+    "static/js/3.cdf35d27.chunk.js": "/warframe-item-tracker/static/js/3.cdf35d27.chunk.js",
+    "static/js/3.cdf35d27.chunk.js.map": "/warframe-item-tracker/static/js/3.cdf35d27.chunk.js.map",
+    "index.html": "/warframe-item-tracker/index.html",
+    "static/css/main.2547f7d5.chunk.css.map": "/warframe-item-tracker/static/css/main.2547f7d5.chunk.css.map",
+    "static/js/2.d5ecd79b.chunk.js.LICENSE.txt": "/warframe-item-tracker/static/js/2.d5ecd79b.chunk.js.LICENSE.txt",
+    "static/media/App.css": "/warframe-item-tracker/static/media/RobotoCondensed-Regular.db6d9169.ttf",
+    "static/media/search-icon.afde00ab.png": "/warframe-item-tracker/static/media/search-icon.afde00ab.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.125b66b3.js",
+    "static/js/2.d5ecd79b.chunk.js",
+    "static/css/main.2547f7d5.chunk.css",
+    "static/js/main.edc8f0c1.chunk.js"
+  ]
+}
