@@ -11,6 +11,7 @@ db = client.itemDatabase
 def initialize_items():
     """ Initialize all items with default data, populating what we can from the api """
 
+
     # Get api data
     result = requests.get('http://api.warframe.market/v1/items')
     json = result.json()
@@ -27,6 +28,10 @@ def initialize_items():
             payload = json["payload"]
             set = payload["item"]["items_in_set"]
             item_ids = []
+            ducats = None
+            trading_tax = None
+            relics = None
+            mod_max_rank = None
 
             for item in set:
                 item_ids.append(item["url_name"])
@@ -53,6 +58,7 @@ def initialize_items():
                 "max_price": -1,
                 "order_history": [],
             }
+            print(db_item)
 
             db.items.insert_one(db_item)
 
