@@ -58,7 +58,7 @@ def initialize_items():
                 "max_price": -1,
                 "order_history": [],
             }
-            print(f"{db_item.name)} was added!")
+            # print(f"{db_item.name)} was added!")
 
             db.items.insert_one(db_item)
 

@@ -7,6 +7,9 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "concurrently": "^6.0.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "nodemon": "^2.0.7",
     "react": "^17.0.1",
     "react-autosuggest": "^10.1.0",
     "react-dom": "^17.0.1",
@@ -17,11 +20,12 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "concurrently \"cd api && env/bin/flask run\" \"source api/env/bin/activate\" \"python3 api/db_updater.py\" \"python3 api/websocket.py\"",
+    "start": "nodemon api/server.js",
     "start-api": "cd api && env/bin/flask run --no-debugger",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "standard api/*.js --fix && standard src/*.js --fix"
   },
   "eslintConfig": {
     "extends": [
