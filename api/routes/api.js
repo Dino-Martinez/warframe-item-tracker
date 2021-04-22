@@ -3,9 +3,9 @@ const router = express.Router()
 const Item = require("../models/item")
 
 
-router.post("/items/track/:item_id", (req, res) => {
+router.get("/items/track/:item_id", (req, res) => {
   /** Route to start tracking an item for updates */
-  Item.findById(req.params.item_id).exec(function (err, item) {
+  Item.findOne({"item_id":req.params.item_id}).exec(function (err, item) {
     item.needs_stats = true
     item.save()
 
@@ -13,9 +13,9 @@ router.post("/items/track/:item_id", (req, res) => {
   })
 })
 
-router.post("/items/untrack/:item_id", (req, res) => {
+router.get("/items/untrack/:item_id", (req, res) => {
   /** Route to stop tracking an item for updates */
-  Item.findById(req.params.item_id).exec(function (err, item) {
+  Item.findOne({"item_id":req.params.item_id}).exec(function (err, item) {
     item.needs_stats = false
     item.save()
 
@@ -25,9 +25,54 @@ router.post("/items/untrack/:item_id", (req, res) => {
 
 router.get("/items/:item_id", (req, res) => {
   /** Route to provide information on a single item */
-  Item.findById(req.params.item_id).exec(function (err, item) {
+
+  Item.findOne({"item_id":req.params.item_id}).exec(function (err, item) {
     res.send(item)
   })
+})
+
+router.get("/watchlist/add/:item_id", (req, res) => {
+  /**Route to add an item to our watchlist*/
+
+  Item.findOneAndUpdate({"item_id":req.params.item_id},{ "is_watched": true}).exec(function (err, item) {
+    if (item)
+      res.send({"status": 200})
+  })
+})
+
+router.get("/watchlist/remove/:item_id", (req, res) => {
+  /**Route to add an item to our watchlist*/
+
+  Item.findOneAndUpdate({"item_id":req.params.item_id},{ "is_watched": false}).exec(function (err, item) {
+    if (item)
+      res.send({"status": 200})
+  })
+})
+
+router.get("/watchlist/list", (req, res) => {
+  /**Route to deliver all watched items*/
+
+  Item.find({"is_watched":true})
+    .lean()
+    .then((items) => {
+      res.send(items)
+    })
+    .catch((err) => {
+      console.log(err.message)
+    })
+})
+
+router.get("/items", (req, res) => {
+  /**Route to deliver all items*/
+
+  Item.find()
+    .lean()
+    .then((items) => {
+      res.send(items)
+    })
+    .catch((err) => {
+      console.log(err.message)
+    })
 })
 
 router.get("/items_tests", (req, res) => {
@@ -40,7 +85,6 @@ router.get("/items_tests", (req, res) => {
   item
     .save()
     .then((item) => {
-      console.log("slkdjfhlas")
       res.send({"status": 200})
     })
 })
