@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ItemSchema = new Schema({
-  item_id: { type: String, select: false },
+  item_id: { type: String, required: true },
   name: { type: String, required: true },
   needs_stats: { type: Boolean },
   img_url: { type: String, require: true },
@@ -13,7 +13,7 @@ const ItemSchema = new Schema({
   is_watched: { type: Boolean },
   needs_stats: { type: Boolean },
   items_in_set: { type: [String] },
-  relics: { type: [String] },
+  relics: { type: [Object] },
   mod_max_rank: { type: Number },
   avg_price: { type: Number },
   min_price: { type: Number },
