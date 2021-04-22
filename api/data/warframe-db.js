@@ -11,9 +11,9 @@ mongoose.connect(
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
-    useFindAndModify: false,
+    useFindAndModify: false
   },
-  function (err, db) {
+  function(err, db) {
     assert.equal(null, err);
     console.log("Connected successfully to database");
 
@@ -24,6 +24,6 @@ mongoose.connection.on(
   "error",
   console.error.bind(console, "MongoDB connection Error:")
 );
-mongoose.set("debug", true);
+mongoose.set("debug", false);
 
 module.exports = mongoose.connection;

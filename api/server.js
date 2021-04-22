@@ -10,17 +10,13 @@ const ws = new WebSocket("wss://warframe.market/socket");
 ws.on("open", () => {
   // Send wf.m our request for socket data
   console.log("Opened connection to warframe websocket");
-  Item.find({}).then(items => {
-    console.log(items);
-    ws.send('{"type": "@WS/SUBSCRIBE/MOST_RECENT"}');
-  });
+  ws.send('{"type": "@WS/SUBSCRIBE/MOST_RECENT"}');
 });
 
 // Whenever we receive a new item posting, store it in our database
 ws.on("message", async data => {
   const json = JSON.parse(data);
   const { payload } = json;
-
   if (payload.order) {
     const { order } = payload;
     const item_id = order.item.url_name;
@@ -28,7 +24,6 @@ ws.on("message", async data => {
       // Check if item exists
       item = await Item.findOne({ item_id: item_id });
       if (!item) {
-        console.log("not found");
         // If no item with this id, then create a new item and add it
         const apiResponse = await fetch(
           `http://api.warframe.market/v1/items/${item_id}`
@@ -49,7 +44,6 @@ ws.on("message", async data => {
             name = item.en.item_name;
             ducats = item.ducats || 0;
             trading_tax = item.trading_tax || 0;
-            console.log(item.en.drop);
             relics = item.en.drop || [];
             mod_max_rank = item.mod_max_rank || 999999;
             thumbnail = item.thumb || "";
@@ -74,18 +68,18 @@ ws.on("message", async data => {
         });
 
         await db_item.save();
-        console.log(`${name} was saved!`);
       } else {
-        console.log("found");
         // If the item exists already, update order history
         if (order.mod_rank && order.item.mod_max_rank) {
           if (order.mod_rank === order.mod_max_rank) {
             item.order_history.push(order.platinum);
+            await item.save();
           } else {
             return { success: false };
           }
         } else {
           item.order_history.push(order.platinum);
+          await item.save();
         }
       }
     } catch (err) {
