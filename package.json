@@ -20,7 +20,7 @@
     "eject": "react-scripts eject",
     "lint": "standard api/*.js --fix && standard src/*.js --fix"
   },
-  "proxy": "http://localhost:5000",
+  "proxy": "https://1zhfaxchy9.execute-api.us-east-1.amazonaws.com/dev/",
   "browserslist": {
     "production": [
       ">0.2%",
