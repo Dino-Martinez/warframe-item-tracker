@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/warframe-item-tracker/static/css/main.7a10c82f.chunk.css",
-    "main.js": "/warframe-item-tracker/static/js/main.7bad2a72.chunk.js",
-    "main.js.map": "/warframe-item-tracker/static/js/main.7bad2a72.chunk.js.map",
+    "main.js": "/warframe-item-tracker/static/js/main.3023d913.chunk.js",
+    "main.js.map": "/warframe-item-tracker/static/js/main.3023d913.chunk.js.map",
     "runtime-main.js": "/warframe-item-tracker/static/js/runtime-main.e7a33a6f.js",
     "runtime-main.js.map": "/warframe-item-tracker/static/js/runtime-main.e7a33a6f.js.map",
     "static/js/2.007820a6.chunk.js": "/warframe-item-tracker/static/js/2.007820a6.chunk.js",
@@ -19,6 +19,6 @@
     "static/js/runtime-main.e7a33a6f.js",
     "static/js/2.007820a6.chunk.js",
     "static/css/main.7a10c82f.chunk.css",
-    "static/js/main.7bad2a72.chunk.js"
+    "static/js/main.3023d913.chunk.js"
   ]
 }
