@@ -1,8 +1,9 @@
 /* Mongoose Connection */
 const mongoose = require('mongoose')
 const assert = require('assert')
+require('dotenv').config()
 
-const url = 'mongodb://localhost/warframe-db'
+const url = process.env.EXPRESS_PORT
 
 mongoose.Promise = global.Promise
 mongoose.connect(

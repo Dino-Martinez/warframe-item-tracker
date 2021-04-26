@@ -187,7 +187,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/warframe-item-tracker/dev/1619456834763-2021-04-26T17:07:14.763Z/warframe-item-tracker.zip"
+                "S3Key": "serverless/warframe-item-tracker/dev/1619467370430-2021-04-26T20:02:50.430Z/warframe-item-tracker.zip"
               },
               "Handler": "index.handler",
               "Runtime": "nodejs12.x",
@@ -212,7 +212,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/warframe-item-tracker/dev/1619456834763-2021-04-26T17:07:14.763Z/warframe-item-tracker.zip"
+                "S3Key": "serverless/warframe-item-tracker/dev/1619467370430-2021-04-26T20:02:50.430Z/warframe-item-tracker.zip"
               },
               "Handler": "index.handler",
               "Runtime": "nodejs12.x",
@@ -237,7 +237,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/warframe-item-tracker/dev/1619456834763-2021-04-26T17:07:14.763Z/warframe-item-tracker.zip"
+                "S3Key": "serverless/warframe-item-tracker/dev/1619467370430-2021-04-26T20:02:50.430Z/warframe-item-tracker.zip"
               },
               "Handler": "index.handler",
               "Runtime": "nodejs12.x",
@@ -255,34 +255,34 @@
               "ApiEventsLogGroup"
             ]
           },
-          "GeneralLambdaVersionXfrm8IRQFg6r8NmAn5WA5XEOPqs2kEKynuAa4QXvxE": {
+          "GeneralLambdaVersionDGpCwm4MfEWZlqq8TGrx8BMNU7NqjZxPaCxycgsiPU": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "GeneralLambdaFunction"
               },
-              "CodeSha256": "wVVt/38zzrZZ9u9kJUuYos532xRpnv965+a6umAqfkg="
+              "CodeSha256": "Nl9ATKlmpJTY1lvg7IYd2cn/u5Sx9G46cqhQG9ZziNw="
             }
           },
-          "UserEventsLambdaVersioneufHwD6vNjcGhRMECJZkr4KT2gQ0skYtN4j4pckYc": {
+          "UserEventsLambdaVersionfZ6eqNJF60yEktR1oSUJ9lFVVKhGLTx6vSBQ5yp94I": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "UserEventsLambdaFunction"
               },
-              "CodeSha256": "wVVt/38zzrZZ9u9kJUuYos532xRpnv965+a6umAqfkg="
+              "CodeSha256": "Nl9ATKlmpJTY1lvg7IYd2cn/u5Sx9G46cqhQG9ZziNw="
             }
           },
-          "ApiEventsLambdaVersionLcM2TiSl3pAu6JnW5tHQ2nRLWySguofcOLB8JuCAw": {
+          "ApiEventsLambdaVersionpZRrUZVQ2MWm9jfIUGUNzhdu5cegRPi9ERG1hTRGY1k": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "ApiEventsLambdaFunction"
               },
-              "CodeSha256": "wVVt/38zzrZZ9u9kJUuYos532xRpnv965+a6umAqfkg="
+              "CodeSha256": "Nl9ATKlmpJTY1lvg7IYd2cn/u5Sx9G46cqhQG9ZziNw="
             }
           },
           "ApiGatewayRestApi": {
@@ -541,7 +541,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1619456830602": {
+          "ApiGatewayDeployment1619467366260": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -680,7 +680,7 @@
           "GeneralLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "GeneralLambdaVersionXfrm8IRQFg6r8NmAn5WA5XEOPqs2kEKynuAa4QXvxE"
+              "Ref": "GeneralLambdaVersionDGpCwm4MfEWZlqq8TGrx8BMNU7NqjZxPaCxycgsiPU"
             },
             "Export": {
               "Name": "sls-warframe-item-tracker-dev-GeneralLambdaFunctionQualifiedArn"
@@ -689,7 +689,7 @@
           "UserEventsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "UserEventsLambdaVersioneufHwD6vNjcGhRMECJZkr4KT2gQ0skYtN4j4pckYc"
+              "Ref": "UserEventsLambdaVersionfZ6eqNJF60yEktR1oSUJ9lFVVKhGLTx6vSBQ5yp94I"
             },
             "Export": {
               "Name": "sls-warframe-item-tracker-dev-UserEventsLambdaFunctionQualifiedArn"
@@ -698,7 +698,7 @@
           "ApiEventsLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "ApiEventsLambdaVersionLcM2TiSl3pAu6JnW5tHQ2nRLWySguofcOLB8JuCAw"
+              "Ref": "ApiEventsLambdaVersionpZRrUZVQ2MWm9jfIUGUNzhdu5cegRPi9ERG1hTRGY1k"
             },
             "Export": {
               "Name": "sls-warframe-item-tracker-dev-ApiEventsLambdaFunctionQualifiedArn"
@@ -834,7 +834,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "GeneralLambdaVersionXfrm8IRQFg6r8NmAn5WA5XEOPqs2kEKynuAa4QXvxE"
+        "versionLogicalId": "GeneralLambdaVersionDGpCwm4MfEWZlqq8TGrx8BMNU7NqjZxPaCxycgsiPU"
       },
       "userEvents": {
         "handler": "index.handler",
@@ -849,7 +849,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "UserEventsLambdaVersioneufHwD6vNjcGhRMECJZkr4KT2gQ0skYtN4j4pckYc"
+        "versionLogicalId": "UserEventsLambdaVersionfZ6eqNJF60yEktR1oSUJ9lFVVKhGLTx6vSBQ5yp94I"
       },
       "apiEvents": {
         "handler": "index.handler",
@@ -864,7 +864,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "ApiEventsLambdaVersionLcM2TiSl3pAu6JnW5tHQ2nRLWySguofcOLB8JuCAw"
+        "versionLogicalId": "ApiEventsLambdaVersionpZRrUZVQ2MWm9jfIUGUNzhdu5cegRPi9ERG1hTRGY1k"
       }
     },
     "configValidationMode": "warn",
@@ -885,7 +885,7 @@
     "artifact": "D:\\Programming\\warframe-item-tracker\\api\\.serverless\\warframe-item-tracker.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/warframe-item-tracker/dev/1619456834763-2021-04-26T17:07:14.763Z",
+    "artifactDirectoryName": "serverless/warframe-item-tracker/dev/1619467370430-2021-04-26T20:02:50.430Z",
     "artifact": "warframe-item-tracker.zip"
   }
 }
