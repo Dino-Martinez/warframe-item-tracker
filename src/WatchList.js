@@ -47,13 +47,18 @@ class WatchList extends React.Component {
    * Updates our state variable when called
    */
   async updateData() {
-    const result = await fetch('/api/watchlist/list')
+    const result = await fetch(
+      'https://1zhfaxchy9.execute-api.us-east-1.amazonaws.com/dev//api/watchlist/list'
+    )
     const json = await result.json()
     this.setState({ items: json })
   }
 
   async removeItem(item_id) {
-    await fetch('/api/watchlist/remove/' + item_id)
+    await fetch(
+      'https://1zhfaxchy9.execute-api.us-east-1.amazonaws.com/dev//api/watchlist/remove/' +
+        item_id
+    )
   }
 
   render() {

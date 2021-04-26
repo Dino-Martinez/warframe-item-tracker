@@ -3,12 +3,12 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-}]
-.row *{
+}
+.row * {
   margin: 10px 0px;
 }
 .ItemInfoContainer {
-  display:flex;
+  display: flex;
   flex-direction: column;
   align-items: center;
 }
@@ -26,7 +26,7 @@
   margin-bottom: 36px;
 }
 .SetItemLink {
-  transition: all .2s ease;
+  transition: all 0.2s ease;
 }
 .SetItemLink:hover {
   -webkit-filter: brightness(50%);
@@ -37,8 +37,8 @@
   width: 100%;
   background: #333;
 }
-#loading-bar > #progress{
-  height:24px;
+#loading-bar > #progress {
+  height: 24px;
   width: 0;
   background: #f2618f;
   animation: loading 1s ease-in-out 0s infinite alternate;
@@ -50,8 +50,8 @@
   justify-content: center;
 }
 .VictoryContainer {
-  width: 500px!important;
-  height: 350px!important;
+  width: 500px !important;
+  height: 350px !important;
 }
 .data-container {
   display: grid;

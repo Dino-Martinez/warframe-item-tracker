@@ -53,7 +53,10 @@ class ItemInfo extends React.Component {
         .toLowerCase()
         .split(' ')
         .join('_')
-      fetch('/api/items/untrack/' + itemId)
+      fetch(
+        'https://1zhfaxchy9.execute-api.us-east-1.amazonaws.com/dev//api/items/untrack/' +
+          itemId
+      )
       this.retrieveData(itemName)
     }
   }
@@ -85,7 +88,10 @@ class ItemInfo extends React.Component {
       .toLowerCase()
       .split(' ')
       .join('_')
-    fetch('/api/items/untrack/' + itemId)
+    fetch(
+      'https://1zhfaxchy9.execute-api.us-east-1.amazonaws.com/dev//api/items/untrack/' +
+        itemId
+    )
     clearInterval(this.intervalID)
   }
 
@@ -103,7 +109,9 @@ class ItemInfo extends React.Component {
     const successfulAPICall = true
 
     // Database Call
-    const url = '/api/items/' + itemId
+    const url =
+      'https://1zhfaxchy9.execute-api.us-east-1.amazonaws.com/dev//api/items/' +
+      itemId
     const itemResults = await fetch(url)
 
     // if there is a bad search query, we display an error message
@@ -138,7 +146,9 @@ class ItemInfo extends React.Component {
     // Add items in set data
     const itemsInSet = await Promise.all(
       itemJson.items_in_set.map(async itemId => {
-        const url = '/api/items/' + itemId
+        const url =
+          'https://1zhfaxchy9.execute-api.us-east-1.amazonaws.com/dev//api/items/' +
+          itemId
         const result = await fetch(url)
         const json = await result.json()
         const item = json
@@ -201,7 +211,10 @@ class ItemInfo extends React.Component {
    * @param {string} itemId
    */
   async addItem(itemId) {
-    await fetch('/api/watchlist/add/' + itemId)
+    await fetch(
+      'https://1zhfaxchy9.execute-api.us-east-1.amazonaws.com/dev//api/watchlist/add/' +
+        itemId
+    )
   }
 
   render() {

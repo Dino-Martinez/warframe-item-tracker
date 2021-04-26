@@ -65,7 +65,9 @@ class SearchBar extends React.Component {
   }
 
   async retrieveAllItems() {
-    const result = await fetch('/api/items')
+    const result = await fetch(
+      'https://1zhfaxchy9.execute-api.us-east-1.amazonaws.com/dev/api/items'
+    )
     const json = await result.json()
     item_list = json
   }
