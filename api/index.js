@@ -1,21 +1,24 @@
 /* eslint-disable camelcase */
-require('dotenv/config')
+// require('dotenv/config')
+const serverless = require('serverless-http')
 const express = require('express')
 const bodyParser = require('body-parser')
 const WebSocket = require('ws')
 const Item = require('./models/item.js')
 const fetch = require('node-fetch')
-
+let open = false
 // Create websocket to receive new item postings from wf.m
 const ws = new WebSocket('wss://warframe.market/socket')
 ws.on('open', () => {
   // Send wf.m our request for socket data
   console.log('Opened connection to warframe websocket')
+  open = true
   ws.send('{"type": "@WS/SUBSCRIBE/MOST_RECENT"}')
 })
 
 // Whenever we receive a new item posting, store it in our database
 ws.on('message', async data => {
+  console.log('Received socket')
   const json = JSON.parse(data)
   const { payload } = json
   if (payload.order) {
@@ -102,11 +105,13 @@ const router = require('./routes/index.js')
 app.use(router)
 
 app.get('/', (req, res) => {
-  res.send({ Hello: 'World' })
+  console.log(open)
+  res.send('Hello World')
 })
 
-app.listen(process.env.EXPRESS_PORT, () => {
-  console.log(`Listening on port ${process.env.EXPRESS_PORT}!`)
-})
+// app.listen(process.env.EXPRESS_PORT, () => {
+//   console.log(`Listening on port ${process.env.EXPRESS_PORT}!`)
+// })
 
-module.exports = app
+module.exports.handler = serverless(app)
+// module.exports = app
