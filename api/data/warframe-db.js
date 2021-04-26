@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const assert = require('assert')
 require('dotenv').config()
 
-const url = process.env.EXPRESS_PORT
+const url = process.env.DB
 
 mongoose.Promise = global.Promise
 mongoose.connect(
