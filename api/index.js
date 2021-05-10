@@ -5,6 +5,8 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const WebSocket = require('ws')
 const Item = require('./models/item.js')
+const cors = require('cors')
+
 let open = false
 // Create websocket to receive new item postings from wf.m
 const ws = new WebSocket('wss://warframe.market/socket')
@@ -55,7 +57,7 @@ require('./data/warframe-db')
 
 // Configure app
 const app = express()
-
+app.use(cors())
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 

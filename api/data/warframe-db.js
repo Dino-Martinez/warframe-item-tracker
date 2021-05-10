@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const assert = require('assert')
 require('dotenv').config()
 
-const url = process.env.DB
+const url =
+  'mongodb+srv://warframe_user:lHLBBxkqsscfSbcj@warframe-cluster.9mxpe.mongodb.net/warframe-cluster?retryWrites=true&w=majority'
 
 mongoose.Promise = global.Promise
 mongoose.connect(

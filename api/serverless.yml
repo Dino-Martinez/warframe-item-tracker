@@ -21,4 +21,31 @@ functions:
   apiEvents:
     handler: index.handler
     events:
-      - http: 'ANY /api/{proxy+}'
+      - http:
+          path: api/items/
+          method: get
+          cors: true
+      - http:
+          path: api/items/track/{proxy+}
+          method: get
+          cors: true
+      - http:
+          path: api/items/untrack/{proxy+}
+          method: get
+          cors: true
+      - http:
+          path: api/items/{proxy+}
+          method: get
+          cors: true
+      - http:
+          path: api/watchlist/add/{proxy+}
+          method: get
+          cors: true
+      - http:
+          path: api/watchlist/remove/{proxy+}
+          method: get
+          cors: true
+      - http:
+          path: api/watchlist/list
+          method: get
+          cors: true
